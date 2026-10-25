@@ -1,0 +1,5035 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="第一类十一个纯旋转点群与第二类点群代表：极射赤面投影、特征标表与不可约表示直积分解。">
+<title>第一类 / 第二类点群 · POINT GROUPS OF THE FIRST &amp; SECOND KIND</title>
+<style>
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+:root {
+  --paper: #E9E0CC;
+  --paper-hi: #F4ECDA;
+  --paper-lo: #D8CBB2;
+  --ink: #171510;
+  --ink-soft: #4A4337;
+  --line: rgba(23, 21, 16, .16);
+  --line-strong: rgba(23, 21, 16, .46);
+  --accent: #D24A2C;
+  --accent-dark: #C87A5B;
+  --accent-yellow: #D8B77A;
+  --accent-deep: #9F3722;
+  --accent-wash: rgba(210, 74, 44, .08);
+  --desk: #C8BAA3;
+  --sans: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --mono: "SFMono-Regular", "Cascadia Mono", "Consolas", "Liberation Mono", "DengXian", "Microsoft YaHei", "PingFang SC", monospace;
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--desk);
+  background-image:
+    linear-gradient(rgba(23, 21, 16, .035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23, 21, 16, .035) 1px, transparent 1px),
+    radial-gradient(rgba(23, 21, 16, .05) .5px, transparent .6px);
+  background-size: 48px 48px, 48px 48px, 4px 4px;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 12px;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--paper-hi);
+}
+
+a {
+  color: inherit;
+}
+
+svg {
+  display: block;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip {
+  position: fixed;
+  top: -80px;
+  left: 16px;
+  z-index: 300;
+  padding: 8px 12px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .08em;
+  text-decoration: none;
+  transition: top .16s ease;
+}
+
+.skip:focus {
+  top: 10px;
+}
+
+.doc {
+  width: 100%;
+  padding: 0 0 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.doc-head {
+  width: min(940px, calc(100vw - 40px));
+  margin: 20px auto 16px;
+  padding-bottom: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid rgba(23, 21, 16, .38);
+  font-family: var(--mono);
+  font-size: 8.3px;
+  line-height: 1.4;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(23, 21, 16, .62);
+}
+
+.doc-brand {
+  flex: none;
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.doc-brand .slash {
+  color: var(--accent);
+  margin: 0 1px;
+}
+
+.doc-title {
+  flex: 1;
+  color: var(--ink);
+  letter-spacing: .1em;
+}
+
+.doc-title span {
+  margin-left: 8px;
+  color: rgba(23, 21, 16, .48);
+}
+
+.doc-meta {
+  flex: none;
+  text-align: right;
+}
+
+.page-frame {
+  position: relative;
+  width: min(940px, calc(100vw - 40px));
+  aspect-ratio: 210 / 297;
+  margin: 0 auto 26px;
+  overflow: hidden;
+  scroll-margin-top: 20px;
+  box-shadow: 0 1px 0 rgba(23, 21, 16, .42), 0 28px 50px -28px rgba(23, 21, 16, .52);
+}
+
+.sheet {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 940px;
+  height: 1329px;
+  padding: 26px 38px 20px;
+  display: flex;
+  flex-direction: column;
+  transform-origin: top left;
+  background-color: var(--paper);
+  background-image: radial-gradient(rgba(23, 21, 16, .045) .45px, transparent .55px);
+  background-size: 4px 4px;
+  border: 1px solid rgba(23, 21, 16, .5);
+  overflow: hidden;
+  color: var(--ink);
+}
+
+.sheet-dark {
+  background-color: var(--ink);
+  background-image: radial-gradient(rgba(233, 224, 204, .035) .45px, transparent .55px);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.p-head {
+  flex: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line-strong);
+  font-family: var(--mono);
+  font-size: 8px;
+  line-height: 1.4;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(23, 21, 16, .62);
+}
+
+.p-head .ph-mid {
+  flex: 1;
+  text-align: center;
+  color: var(--ink);
+}
+
+.p-head .ph-right {
+  flex: none;
+  text-align: right;
+}
+
+.p-body {
+  flex: 1;
+  min-height: 0;
+  padding-top: 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.p-foot {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 7.8px;
+  line-height: 1.4;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(23, 21, 16, .56);
+}
+
+.p-foot a {
+  color: var(--accent-deep);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+}
+
+.sheet-dark .p-head,
+.sheet-dark .p-foot {
+  border-color: rgba(233, 224, 204, .26);
+  color: rgba(233, 224, 204, .55);
+}
+
+.sheet-dark .p-head .ph-mid {
+  color: var(--paper);
+}
+
+.sheet-dark .p-foot a {
+  color: var(--accent-dark);
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 8.4px;
+  line-height: 1.4;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.eyebrow-line {
+  width: 28px;
+  height: 1px;
+  flex: none;
+  background: var(--accent);
+}
+
+.file-tag {
+  margin-left: auto;
+  padding: 4px 7px;
+  border: 1px solid var(--line-strong);
+  color: var(--accent-deep);
+  font-size: 7.8px;
+  letter-spacing: .1em;
+  white-space: nowrap;
+}
+
+.page-title {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line-strong);
+  margin-bottom: 14px;
+}
+
+.page-title .eyebrow {
+  margin-bottom: 8px;
+}
+
+.page-title h2 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -.035em;
+}
+
+.page-desc {
+  max-width: 330px;
+  margin: 0 0 2px;
+  text-align: right;
+  font-size: 10px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+
+.cover-body {
+  padding-top: 22px;
+}
+
+.cover-deco {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cover-fan {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  width: 520px;
+  height: 520px;
+}
+
+.cover > .p-head,
+.cover > .p-body,
+.cover > .p-foot {
+  position: relative;
+  z-index: 1;
+}
+
+.cover-intro {
+  min-width: 0;
+}
+
+.cover h1 {
+  margin: 18px 0 0;
+  font-size: 64px;
+  font-weight: 800;
+  line-height: .88;
+  letter-spacing: -.05em;
+  white-space: nowrap;
+}
+
+.cover-spectrum {
+  display: flex;
+  width: 196px;
+  height: 4px;
+  margin-top: 16px;
+}
+
+.cover-spectrum i {
+  flex: 1;
+}
+
+.cover-spectrum i:nth-child(1) {
+  background: #5D3024;
+}
+
+.cover-spectrum i:nth-child(2) {
+  background: #9C4230;
+}
+
+.cover-spectrum i:nth-child(3) {
+  background: #C56B45;
+}
+
+.cover-spectrum i:nth-child(4) {
+  background: #D9A05E;
+}
+
+.cover-sub {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: end;
+  margin-top: 20px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line-strong);
+}
+
+.cover-en {
+  font-family: var(--mono);
+  font-size: 9px;
+  line-height: 1.9;
+  letter-spacing: .19em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.cover-seq {
+  font-family: var(--mono);
+  font-size: 8px;
+  line-height: 1.9;
+  letter-spacing: .1em;
+  text-align: right;
+  white-space: nowrap;
+  color: var(--ink-soft);
+}
+
+.cover-lede {
+  max-width: 620px;
+  margin: 18px 0 0;
+  padding-left: 16px;
+  border-left: 2px solid var(--accent);
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--ink-soft);
+}
+
+.cover-lede strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.cover-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: 18px;
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.stat {
+  position: relative;
+  min-width: 0;
+  padding: 10px 0 9px;
+}
+
+.stat + .stat {
+  padding-left: 16px;
+  border-left: 1px solid var(--line);
+}
+
+.stat::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 16px;
+  height: 2px;
+  background: var(--accent);
+}
+
+.stat + .stat::before {
+  left: 16px;
+}
+
+.stat-v {
+  display: block;
+  font-family: var(--mono);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-k {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 7.8px;
+  line-height: 1.4;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.stat-k span {
+  opacity: .64;
+}
+
+.cover-register {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-top: 12px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 7px 0;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: .06em;
+  color: var(--ink-soft);
+}
+
+.cover-register span {
+  padding: 0 11px;
+  border-right: 1px solid var(--line);
+}
+
+.cover-register span:first-child {
+  padding-left: 0;
+}
+
+.cover-register span:last-child {
+  border-right: 0;
+}
+
+.cover-register span:nth-child(6) {
+  color: var(--accent-deep);
+}
+
+.plate {
+  position: relative;
+  width: 100%;
+  margin: 20px 0 0;
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--ink);
+}
+
+.plate::before,
+.plate::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  width: 11px;
+  height: 11px;
+  border-color: var(--accent-yellow);
+  border-style: solid;
+  pointer-events: none;
+}
+
+.plate::before {
+  top: 4px;
+  left: 4px;
+  border-width: 1px 0 0 1px;
+}
+
+.plate::after {
+  right: 4px;
+  bottom: 4px;
+  border-width: 0 1px 1px 0;
+}
+
+.plate-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 7px 11px;
+  border-bottom: 1px solid rgba(233, 224, 204, .22);
+  font-family: var(--mono);
+  font-size: 7.8px;
+  line-height: 1.4;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: rgba(233, 224, 204, .64);
+}
+
+.plate-head span:last-child {
+  color: var(--accent-yellow);
+}
+
+.plate-main {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 244px;
+  align-items: stretch;
+}
+
+.plate-rays {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  line-height: 0;
+  pointer-events: none;
+}
+
+.plate-rays svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.plate-chart {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  line-height: 0;
+  border-right: 1px solid rgba(233, 224, 204, .18);
+}
+
+.plate-chart svg {
+  width: 100%;
+  height: auto;
+}
+
+.plate-side {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  padding: 13px 13px 11px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  overflow: hidden;
+  background:
+    radial-gradient(130% 90% at 0% 100%, rgba(236, 231, 220, .075), rgba(236, 231, 220, 0) 56%),
+    linear-gradient(180deg, rgba(58, 48, 34, .4), rgba(23, 21, 16, .6));
+  -webkit-backdrop-filter: blur(3px) saturate(.9);
+  backdrop-filter: blur(3px) saturate(.9);
+  box-shadow:
+    inset 1px 0 0 rgba(233, 224, 204, .16),
+    inset 0 -40px 60px rgba(0, 0, 0, .12);
+}
+
+.plate-kicker {
+  font-family: var(--mono);
+  font-size: 7.4px;
+  line-height: 1.4;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(233, 224, 204, .5);
+}
+
+.plate-title {
+  margin-top: 4px;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -.035em;
+}
+
+.plate-title span {
+  margin-left: 4px;
+  color: var(--accent-yellow);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: .02em;
+}
+
+.plate-data {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  margin-top: 12px;
+  background: transparent;
+  border-top: 1px solid rgba(233, 224, 204, .16);
+  border-bottom: 1px solid rgba(233, 224, 204, .12);
+}
+
+.plate-data > div {
+  min-width: 0;
+  padding: 7px 5px 6px;
+  background: transparent;
+}
+
+.plate-data > div + div {
+  border-left: 1px solid rgba(233, 224, 204, .14);
+}
+
+.plate-data > div:first-child {
+  padding-left: 0;
+}
+
+.plate-data > div:last-child {
+  padding-right: 0;
+}
+
+.plate-data span {
+  display: block;
+  font-family: var(--mono);
+  font-size: 6.7px;
+  letter-spacing: .07em;
+  color: rgba(233, 224, 204, .44);
+}
+
+.plate-data b {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.2;
+  color: var(--paper);
+}
+
+.plate-note {
+  margin: 0;
+  font-size: 8.2px;
+  line-height: 1.65;
+  color: rgba(233, 224, 204, .62);
+}
+
+.plate-spectrum {
+  margin-top: 16px;
+}
+
+.ps-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 6.2px;
+  line-height: 1.4;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(233, 224, 204, .4);
+}
+
+.ps-head span:last-child {
+  color: var(--accent-yellow);
+}
+
+.ps-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 5px;
+}
+
+.ps-bars i {
+  display: block;
+  height: 7px;
+}
+
+.ps-bars i:nth-child(1) {
+  width: 100%;
+  background: linear-gradient(90deg, #4D271E, #6B3628);
+}
+
+.ps-bars i:nth-child(2) {
+  width: 84%;
+  background: linear-gradient(90deg, #7E3528, #A34A32);
+}
+
+.ps-bars i:nth-child(3) {
+  width: 93%;
+  background: linear-gradient(90deg, #B85C3A, #D0794E);
+}
+
+.ps-bars i:nth-child(4) {
+  width: 68%;
+  background: linear-gradient(90deg, #D59A5C, #E3B976);
+}
+
+.plate-foot-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 6.7px;
+  letter-spacing: .09em;
+  line-height: 1.4;
+  color: rgba(233, 224, 204, .44);
+}
+
+.plate-barcode {
+  height: 16px;
+  margin-top: 5px;
+  color: rgba(233, 224, 204, .62);
+}
+
+.barcode {
+  background-image: repeating-linear-gradient(
+    90deg,
+    currentColor 0 1px,
+    transparent 1px 3px,
+    currentColor 3px 4px,
+    transparent 4px 7px,
+    currentColor 7px 10px,
+    transparent 10px 12px,
+    currentColor 12px 13px,
+    transparent 13px 17px
+  );
+}
+
+.index-body {
+  padding-top: 16px;
+}
+
+.idx-header,
+.idx-row {
+  display: grid;
+  grid-template-columns: 28px 48px 58px 62px minmax(100px, 1fr) minmax(80px, .9fr) 48px 18px;
+  gap: 10px;
+  align-items: center;
+}
+
+.idx-header {
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line-strong);
+  font-family: var(--mono);
+  font-size: 7.4px;
+  line-height: 1.4;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.idx-row {
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  transition: background .16s ease;
+}
+
+.idx-row:hover,
+.idx-row:focus-visible {
+  background: rgba(255, 255, 255, .3);
+  outline: none;
+}
+
+.idx-row:focus-visible {
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.idx-row:hover .i-go {
+  color: var(--accent);
+  transform: translate(2px, -2px);
+}
+
+.i-no {
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: .06em;
+  color: var(--accent-deep);
+}
+
+.i-fig svg {
+  width: 44px;
+  height: 44px;
+}
+
+.i-hm {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -.04em;
+}
+
+.i-sch {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ink-soft);
+}
+
+.i-sys,
+.i-fam {
+  font-size: 9.3px;
+  line-height: 1.3;
+  color: var(--ink-soft);
+}
+
+.i-sys em,
+.i-fam em {
+  display: block;
+  margin-top: 1px;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 6.7px;
+  letter-spacing: .06em;
+  opacity: .65;
+}
+
+.i-order {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 9.3px;
+  font-variant-numeric: tabular-nums;
+}
+
+.order-bar {
+  display: block;
+  height: 3px;
+  background: var(--accent);
+  opacity: .74;
+}
+
+.i-go {
+  font-family: var(--mono);
+  font-size: 11px;
+  text-align: right;
+  color: var(--ink-soft);
+  transition: transform .16s ease, color .16s ease;
+}
+
+.idx-note {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 7.4px;
+  line-height: 1.6;
+  letter-spacing: .06em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+
+.idx-note a,
+.guide-link {
+  color: var(--accent-deep);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+}
+
+.guide-body {
+  padding-top: 16px;
+}
+
+.guide-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin-top: 4px;
+}
+
+.guide-col {
+  min-width: 0;
+  border-top: 1px solid var(--line-strong);
+  padding-top: 10px;
+}
+
+.guide-kicker {
+  font-family: var(--mono);
+  font-size: 7.7px;
+  line-height: 1.4;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+}
+
+.guide-col h3 {
+  margin: 10px 0 8px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -.02em;
+}
+
+.guide-col .guide-kicker + h3 {
+  margin-top: 8px;
+}
+
+.guide-col > .guide-kicker:nth-of-type(2) {
+  margin-top: 18px;
+}
+
+.legend-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 16px;
+}
+
+.lg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.lg-sym {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex: none;
+  color: var(--accent);
+}
+
+.lg-sym svg {
+  width: 18px;
+  height: 18px;
+}
+
+.lg b {
+  display: block;
+  font-size: 9.3px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.lg em {
+  display: block;
+  margin-top: 1px;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 6.5px;
+  letter-spacing: .06em;
+  color: var(--ink-soft);
+}
+
+.guide-col p {
+  margin: 11px 0 0;
+  font-size: 10px;
+  line-height: 1.75;
+  color: var(--ink-soft);
+}
+
+.notation-list {
+  list-style: none;
+  margin: 2px 0 0;
+  padding: 0;
+}
+
+.notation-list li {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 9px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 9.4px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+
+.notation-list b {
+  padding-top: 1px;
+  font-family: var(--mono);
+  font-size: 7.3px;
+  font-weight: 500;
+  letter-spacing: .05em;
+  color: var(--ink);
+  text-transform: uppercase;
+}
+
+.scope-big {
+  margin: 8px 0 8px;
+  font-family: var(--mono);
+  font-size: 38px;
+  font-weight: 500;
+  line-height: .95;
+  letter-spacing: -.06em;
+}
+
+.scope-big span {
+  color: var(--accent);
+  font-size: .42em;
+  letter-spacing: .02em;
+}
+
+.scope-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 7.7px;
+  line-height: 1.4;
+  letter-spacing: .06em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+
+.scope-line b {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.guide-link {
+  display: inline-block;
+  margin-top: 14px;
+  font-family: var(--mono);
+  font-size: 7.7px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.guide-sample {
+  margin-top: auto;
+  border: 1px solid var(--line-strong);
+  background: rgba(247, 240, 225, .46);
+}
+
+.guide-sample-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 7px 11px;
+  border-bottom: 1px solid var(--line-strong);
+  font-family: var(--mono);
+  font-size: 7.5px;
+  line-height: 1.4;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.guide-sample-body {
+  display: grid;
+  grid-template-columns: 480px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  padding: 10px 12px;
+}
+
+.guide-sample-chart {
+  width: 100%;
+  line-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.guide-sample-chart svg {
+  width: 100%;
+  height: auto;
+}
+
+.guide-sample-note h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+}
+
+.guide-sample-note p {
+  margin: 0;
+  font-size: 9.5px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
+.pg .p-body {
+  padding-top: 10px;
+}
+
+.g-top {
+  flex: none;
+}
+
+.g-head {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 260px;
+  gap: 14px;
+  align-items: start;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.g-no {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding-top: 8px;
+  font-family: var(--mono);
+  font-size: 8.2px;
+  line-height: 1.4;
+  letter-spacing: .07em;
+  color: var(--accent-deep);
+}
+
+.g-no::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  margin-top: 2px;
+  flex: none;
+  background: var(--accent);
+}
+
+.g-no span {
+  opacity: .55;
+}
+
+.g-sym {
+  display: flex;
+  align-items: baseline;
+  min-width: 0;
+  margin: 0;
+}
+
+.g-hm {
+  font-size: 52px;
+  font-weight: 800;
+  line-height: .82;
+  letter-spacing: -.055em;
+  white-space: nowrap;
+}
+
+.g-sch {
+  margin-left: 14px;
+  padding-left: 14px;
+  border-left: 1px solid var(--line-strong);
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -.02em;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.g-tags {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 5px;
+  padding-top: 2px;
+}
+
+.tag {
+  padding: 5px 6px;
+  border: 1px solid var(--line-strong);
+  background: rgba(255, 255, 255, .12);
+  font-family: var(--mono);
+  font-size: 7.2px;
+  line-height: 1;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.tag.accent {
+  border-color: var(--accent);
+  color: var(--accent-deep);
+}
+
+.tag.second {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.bar {
+  text-decoration: overline;
+  text-decoration-thickness: 1.5px;
+}
+
+.second-body {
+  padding-top: 16px;
+}
+
+.s-lede {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr) 278px;
+  gap: 18px;
+  align-items: center;
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line-strong);
+  background: rgba(247, 240, 225, .42);
+}
+
+.s-lede-head span {
+  display: block;
+  font-family: var(--mono);
+  font-size: 6.8px;
+  line-height: 1.3;
+  letter-spacing: .1em;
+  color: var(--ink-soft);
+}
+
+.s-lede-head b {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -.02em;
+}
+
+.s-lede p {
+  margin: 0;
+  font-size: 9px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+
+.s-lede-formula {
+  padding-left: 13px;
+  border-left: 1px solid var(--line);
+}
+
+.s-lede-formula span {
+  display: block;
+  font-family: var(--mono);
+  font-size: 6.6px;
+  letter-spacing: .1em;
+  color: var(--ink-soft);
+}
+
+.s-lede-formula b {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--mono);
+  font-size: 10.2px;
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -.01em;
+  white-space: nowrap;
+}
+
+.s-idx-header,
+.s-idx-row {
+  display: grid;
+  grid-template-columns: 26px 58px 58px 64px minmax(58px, .65fr) minmax(58px, .75fr) minmax(170px, 1.5fr) 44px 32px;
+  gap: 8px;
+  align-items: center;
+}
+
+.s-idx-header {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line-strong);
+  font-family: var(--mono);
+  font-size: 7.2px;
+  line-height: 1.35;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.s-idx-row {
+  padding: 26px 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--ink);
+  transition: background .16s ease;
+}
+
+.s-idx-row:hover,
+.s-idx-row:focus-visible {
+  background: rgba(255, 255, 255, .3);
+  outline: none;
+}
+
+.s-idx-row:focus-visible {
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.s-idx-row:hover .i-go {
+  color: var(--accent);
+}
+
+.s-idx-row .i-fig svg {
+  width: 64px;
+  height: 64px;
+}
+
+.s-idx-row .i-hm {
+  font-size: 20px;
+}
+
+.s-idx-row .i-sch {
+  font-size: 13.5px;
+}
+
+.s-idx-row .i-sys,
+.s-idx-row .i-fam {
+  font-size: 9px;
+}
+
+.s-idx-row .i-con {
+  min-width: 0;
+  font-family: var(--mono);
+  font-size: 9.4px;
+  line-height: 1.35;
+  color: var(--ink);
+}
+
+.s-idx-row .i-con b {
+  display: block;
+  font-weight: 500;
+  letter-spacing: -.015em;
+}
+
+.s-idx-row .i-con em {
+  display: block;
+  margin-top: 3px;
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 7.4px;
+  color: var(--ink-soft);
+}
+
+.s-idx-row .i-go {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
+  font-family: var(--mono);
+  font-size: 7.6px;
+  line-height: 1.15;
+  color: var(--ink-soft);
+  transition: color .16s ease;
+}
+
+.s-idx-row .i-go b {
+  font-size: 8px;
+  font-weight: 500;
+  color: var(--accent-deep);
+}
+
+.s-rest {
+  margin-top: auto;
+  padding-top: 9px;
+  border-top: 1px solid var(--line-strong);
+}
+
+.s-rest-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 7.2px;
+  line-height: 1.4;
+  letter-spacing: .08em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+
+.s-rest-grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(7, auto);
+  column-gap: 26px;
+  row-gap: 0;
+  margin-top: 4px;
+}
+
+.s-rest-item {
+  display: grid;
+  grid-template-columns: 46px 42px minmax(0, 1fr) 62px;
+  align-items: baseline;
+  gap: 7px;
+  min-width: 0;
+  padding: 3px 0;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 8px;
+  line-height: 1.2;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.s-rest-item b {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.s-rest-item em {
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 6.9px;
+  color: var(--ink-soft);
+  opacity: .78;
+}
+
+.s-rest-item i {
+  font-style: normal;
+  font-size: 6.8px;
+  text-align: right;
+  color: var(--ink-soft);
+  opacity: .64;
+}
+
+.second-body .idx-note {
+  margin-top: 8px;
+}
+
+.pg-wide .g-hero {
+  grid-template-columns: 380px minmax(0, 1fr);
+}
+
+.pg-wide .g-tables {
+  grid-template-columns: 1fr;
+}
+
+.pg-wide .g-hero .fig {
+  max-width: 380px;
+}
+
+.pg-wide .char-table,
+.pg-wide .prod-table {
+  font-size: 9.8px;
+}
+
+.pg-wide .char-table thead th,
+.pg-wide .prod-table thead th {
+  font-size: 8.4px;
+}
+
+.pg-wide .char-table td.basis {
+  min-width: 150px;
+}
+
+.product-next {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 9px 10px;
+  border: 1px solid var(--line-strong);
+  background: rgba(247, 240, 225, .46);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .07em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+
+.product-next a {
+  color: var(--accent-deep);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+}
+
+.product-page-body {
+  padding-top: 16px;
+}
+
+.product-page-summary {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  border-top: 1px solid var(--line-strong);
+  border-bottom: 1px solid var(--line-strong);
+  margin: 0 0 14px;
+}
+
+.product-page-summary > div {
+  padding: 9px 12px 10px;
+  border-right: 1px solid var(--line);
+}
+
+.product-page-summary > div:last-child {
+  border-right: 0;
+}
+
+.product-page-summary span {
+  display: block;
+  font-family: var(--mono);
+  font-size: 7.5px;
+  letter-spacing: .1em;
+  color: var(--ink-soft);
+}
+
+.product-page-summary b {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--mono);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.product-page .panel .panel-body {
+  padding: 10px 12px 12px;
+}
+
+.product-page .prod-table {
+  font-size: 10.5px;
+}
+
+.product-page .prod-table th,
+.product-page .prod-table td {
+  padding: 7px 5px;
+}
+
+.product-back {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: .07em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+
+.product-back a {
+  color: var(--accent-deep);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+}
+
+.g-note {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 14px;
+  padding: 9px 0 10px;
+  border-bottom: 1px solid var(--line);
+}
+
+.g-note-label {
+  padding-top: 2px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.g-note p {
+  margin: 0;
+  font-size: 10.8px;
+  line-height: 1.7;
+  color: var(--ink-soft);
+}
+
+.g-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 18px;
+  align-items: stretch;
+  margin-top: 14px;
+}
+
+.fig {
+  position: relative;
+  min-width: 0;
+  margin: 0;
+  border: 1px solid var(--line-strong);
+  background: var(--paper-hi);
+}
+
+.fig-head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: -1px -1px 0;
+  height: 30px;
+  padding: 0 9px 0 27px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: "DengXian", "Microsoft YaHei", "PingFang SC", var(--sans);
+  font-size: 8px;
+  line-height: 1.4;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.fig-head::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 20px;
+  background: linear-gradient(
+    to right,
+    #5fad93 0 25%,
+    #E3C45B 25% 50%,
+    #E68B4A 50% 75%,
+    #C94C3B 75% 100%
+  );
+}
+
+.fig-head > span:first-child {
+  font-family: "DengXian", "Microsoft YaHei", "PingFang SC", var(--sans);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: .01em;
+  color: var(--paper);
+}
+
+.fig-view-en {
+  margin-left: 4px;
+  color: rgba(233, 224, 204, .54);
+}
+
+.fig-head > span:last-child {
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: .08em;
+  color: rgba(233, 224, 204, .55);
+}
+
+.fig-chart {
+  position: relative;
+  line-height: 0;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+}
+
+.fig-chart svg {
+  width: 100%;
+  height: auto;
+}
+
+.fig-chart::before,
+.fig-chart::after {
+  content: "";
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-color: var(--accent);
+  border-style: solid;
+  pointer-events: none;
+}
+
+.fig-chart::before {
+  top: 7px;
+  left: 7px;
+  border-width: 1px 0 0 1px;
+}
+
+.fig-chart::after {
+  right: 7px;
+  bottom: 7px;
+  border-width: 0 1px 1px 0;
+}
+
+.fig figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 9px;
+  background: rgba(255, 255, 255, .2);
+  font-family: "DengXian", "Microsoft YaHei", "PingFang SC", var(--sans);
+  font-size: 7.1px;
+  line-height: 1.4;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.g-side {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.g-side-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 7.2px;
+  line-height: 1.4;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.g-facts {
+  margin: 0;
+  border-top: 1px solid var(--line-strong);
+}
+
+.g-facts > div {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 8px;
+  align-items: baseline;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.g-facts dt {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.g-facts dd {
+  margin: 0;
+  font-size: 10.5px;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.g-facts dd em {
+  display: block;
+  margin-top: 1px;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 6.7px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.g-facts dd.mono {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.g-facts .chips {
+  margin-top: 1px;
+}
+
+.chip {
+  padding: 3px 5px;
+  border: 1px solid var(--line-strong);
+  background: rgba(255, 255, 255, .16);
+  font-family: var(--mono);
+  font-size: 8.2px;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+.chip b {
+  margin-left: 3px;
+  font-size: 6.4px;
+  font-weight: 500;
+  color: var(--accent-deep);
+}
+
+.g-side-note {
+  margin: 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+  font-size: 8.4px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+
+.checks {
+  margin-top: auto;
+  border: 1px solid var(--line-strong);
+  background: rgba(247, 240, 225, .46);
+}
+
+.checks-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 9px;
+  border-bottom: 1px solid var(--line-strong);
+  font-family: var(--mono);
+  font-size: 7.1px;
+  line-height: 1.4;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.check-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.check-cell {
+  min-width: 0;
+  padding: 6px 9px 7px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.check-cell:nth-child(2n) {
+  border-right: 0;
+}
+
+.check-cell:nth-child(n + 3) {
+  border-bottom: 0;
+}
+
+.check-cell span {
+  display: block;
+  font-family: var(--mono);
+  font-size: 6.7px;
+  line-height: 1.4;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.check-cell b {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.g-tables {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.panel {
+  position: relative;
+  min-width: 0;
+  border: 1px solid var(--line-strong);
+  background: rgba(247, 240, 225, .46);
+}
+
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--line-strong);
+  font-family: var(--mono);
+  font-size: 7.3px;
+  line-height: 1.4;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.panel-head strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.panel-body {
+  padding: 6px 9px 9px;
+}
+
+.panel::before,
+.panel::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-color: var(--accent);
+  border-style: solid;
+  pointer-events: none;
+}
+
+.panel::before {
+  top: -1px;
+  left: -1px;
+  border-width: 1px 0 0 1px;
+}
+
+.panel::after {
+  right: -1px;
+  bottom: -1px;
+  border-width: 0 1px 1px 0;
+}
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.char-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 9.2px;
+  line-height: 1.2;
+}
+
+.char-table th,
+.char-table td {
+  padding: 5px 4px;
+  border-bottom: 1px solid var(--line);
+}
+
+.char-table thead th {
+  vertical-align: bottom;
+  text-align: right;
+  white-space: nowrap;
+  font-weight: 500;
+  font-size: 7.5px;
+  letter-spacing: .02em;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--line-strong);
+}
+
+.char-table thead th:first-child {
+  text-align: left;
+}
+
+.char-table thead th.basis-h {
+  min-width: 128px;
+  padding-left: 8px;
+  text-align: left;
+}
+
+.char-table tbody th {
+  text-align: left;
+  font-family: var(--sans);
+  font-size: 9.5px;
+  font-weight: 700;
+}
+
+.char-table td.num {
+  width: 30px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.char-table td.num.neg,
+.char-table td.num.complex {
+  color: var(--accent-deep);
+}
+
+.char-table td.basis {
+  min-width: 128px;
+  padding-left: 8px;
+  text-align: left;
+  font-family: var(--sans);
+  font-size: 8.4px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+}
+
+.char-table tbody tr:hover {
+  background: rgba(255, 255, 255, .28);
+}
+
+.char-table tbody tr:last-child th,
+.char-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.prod-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-family: var(--mono);
+  font-size: 8.7px;
+  line-height: 1.3;
+}
+
+.prod-table.compact {
+  width: auto;
+  min-width: 58%;
+  table-layout: auto;
+}
+
+.prod-table th,
+.prod-table td {
+  padding: 5px 3px;
+  border: 1px solid var(--line);
+  text-align: center;
+  vertical-align: middle;
+}
+
+.prod-table thead th {
+  font-weight: 500;
+  font-size: 7.5px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, .24);
+  border-bottom-color: var(--line-strong);
+}
+
+.prod-table thead th:first-child {
+  width: 30px;
+  color: var(--ink-soft);
+  font-size: 10px;
+}
+
+.prod-table tbody th {
+  font-weight: 600;
+  font-size: 8.2px;
+  background: rgba(255, 255, 255, .16);
+}
+
+.prod-table td.diag {
+  background: rgba(210, 74, 44, .07);
+}
+
+.table-note {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 7px;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--line);
+  font-size: 7.9px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.table-note b {
+  padding-top: 1px;
+  font-family: var(--mono);
+  font-size: 6.6px;
+  font-weight: 500;
+  letter-spacing: .07em;
+  color: var(--accent-deep);
+  text-transform: uppercase;
+}
+
+.g-tail {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: auto;
+  padding-top: 7px;
+  border-top: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 7.1px;
+  line-height: 1.4;
+  letter-spacing: .07em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+
+.g-tail .barcode {
+  width: 150px;
+  height: 12px;
+  color: rgba(23, 21, 16, .38);
+}
+
+.colophon-body {
+  padding-top: 24px;
+}
+
+.colophon-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  border-bottom: 1px solid rgba(233, 224, 204, .24);
+  padding-bottom: 20px;
+}
+
+.colophon-body .eyebrow {
+  color: rgba(233, 224, 204, .62);
+}
+
+.colophon-body .eyebrow-line {
+  background: var(--accent-dark);
+}
+
+.colophon-top h2 {
+  margin: 16px 0 0;
+  font-size: 44px;
+  font-weight: 800;
+  line-height: .95;
+  letter-spacing: -.045em;
+}
+
+.colophon-en {
+  margin-top: 10px;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: .19em;
+  color: rgba(233, 224, 204, .5);
+  text-transform: uppercase;
+}
+
+.colophon-mark {
+  font-family: var(--mono);
+  font-size: 88px;
+  font-weight: 500;
+  line-height: .8;
+  letter-spacing: -.08em;
+  color: var(--accent-dark);
+}
+
+.colophon-lede {
+  max-width: 700px;
+  margin: 22px 0 0;
+  font-size: 12px;
+  line-height: 1.8;
+  color: rgba(233, 224, 204, .7);
+}
+
+.colophon-body .foot-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 26px;
+  margin-top: 24px;
+  padding: 22px 0;
+  border-top: 1px solid rgba(233, 224, 204, .24);
+  border-bottom: 1px solid rgba(233, 224, 204, .24);
+}
+
+.colophon-body .foot-grid h4 {
+  margin: 0 0 8px;
+  font-family: var(--mono);
+  font-size: 7px;
+  font-weight: 400;
+  letter-spacing: .12em;
+  color: rgba(233, 224, 204, .45);
+  text-transform: uppercase;
+}
+
+.colophon-body .foot-grid p {
+  margin: 0;
+  font-size: 9.6px;
+  line-height: 1.8;
+  color: rgba(233, 224, 204, .7);
+}
+
+.colophon-end {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 16px;
+  align-items: stretch;
+  margin-top: auto;
+}
+
+.colophon-plate {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(233, 224, 204, .22);
+}
+
+.colophon-plate-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 7px 9px;
+  border-bottom: 1px solid rgba(233, 224, 204, .18);
+  font-family: var(--mono);
+  font-size: 8px;
+  line-height: 1.4;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: rgba(233, 224, 204, .55);
+}
+
+.colophon-plate-head span:last-child {
+  color: var(--accent-dark);
+}
+
+.colophon-chart {
+  line-height: 0;
+}
+
+.colophon-chart svg {
+  width: 100%;
+  height: auto;
+}
+
+.colophon-register {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(233, 224, 204, .22);
+  padding: 9px 10px 8px;
+}
+
+.colophon-register-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(233, 224, 204, .18);
+  font-family: var(--mono);
+  font-size: 8px;
+  line-height: 1.4;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(233, 224, 204, .55);
+}
+
+.colophon-register-head span:last-child {
+  color: var(--accent-dark);
+}
+
+.colophon-register-list {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+}
+
+.colophon-register-list li {
+  display: grid;
+  grid-template-columns: 54px 54px minmax(0, 1fr) 38px;
+  gap: 6px;
+  align-items: baseline;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(233, 224, 204, .12);
+  font-family: var(--mono);
+  font-size: 8.2px;
+  line-height: 1.35;
+  color: rgba(233, 224, 204, .68);
+}
+
+.colophon-register-list .r-hm {
+  color: var(--paper);
+  font-weight: 500;
+}
+
+.colophon-register-list .r-sch {
+  color: var(--accent-dark);
+}
+
+.colophon-register-list .r-fam {
+  font-size: 7.4px;
+  color: rgba(233, 224, 204, .42);
+}
+
+.colophon-register-list .r-page {
+  text-align: right;
+  color: rgba(233, 224, 204, .55);
+}
+
+.colophon-register-note {
+  margin: auto 0 0;
+  padding-top: 7px;
+  border-top: 1px solid rgba(233, 224, 204, .18);
+  font-size: 8px;
+  line-height: 1.5;
+  color: rgba(233, 224, 204, .44);
+}
+
+.colophon-barcode {
+  width: 360px;
+  height: 20px;
+  margin-top: 18px;
+  color: rgba(233, 224, 204, .55);
+}
+
+.colophon-footline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(233, 224, 204, .24);
+  font-family: var(--mono);
+  font-size: 7.2px;
+  line-height: 1.4;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: rgba(233, 224, 204, .45);
+}
+
+.colophon-footline a {
+  color: var(--accent-dark);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+}
+
+.cover h1 {
+  font-size: 58px;
+}
+
+.g-hm {
+  font-size: 48px;
+}
+
+.page-title h2 {
+  font-size: 30px;
+}
+
+.colophon-top h2 {
+  font-size: 40px;
+}
+
+.colophon-mark {
+  font-size: 74px;
+}
+
+.p-head,
+.p-foot,
+.tag,
+.g-no,
+.fig-head,
+.fig figcaption,
+.g-side-head,
+.g-facts dd em,
+.g-side-note,
+.checks-head,
+.check-cell span,
+.panel-head,
+.table-note,
+.g-tail,
+.idx-header,
+.idx-note,
+.i-no,
+.i-sys em,
+.i-fam em,
+.plate-head,
+.plate-kicker,
+.plate-data span,
+.plate-foot-label,
+.lg em,
+.notation-list b,
+.guide-kicker,
+.guide-sample-head,
+.scope-line,
+.colophon-body .foot-grid h4,
+.colophon-footline,
+.file-tag,
+.stat-k {
+  font-size: 8px;
+}
+
+.i-sys,
+.i-fam {
+  font-size: 9.8px;
+}
+
+.char-table thead th,
+.prod-table thead th {
+  font-size: 8px;
+}
+
+.char-table td.num {
+  font-size: 9.6px;
+}
+
+.char-table td.basis {
+  font-size: 8.8px;
+}
+
+.prod-table {
+  font-size: 9.2px;
+}
+
+.prod-table tbody th {
+  font-size: 8.6px;
+}
+
+.table-note {
+  font-size: 8.2px;
+}
+
+.g-facts dd {
+  font-size: 10.8px;
+}
+
+.g-note p {
+  font-size: 11.2px;
+}
+
+.page-desc {
+  font-size: 10.5px;
+}
+
+.g-hero {
+  grid-template-columns: 440px minmax(0, 1fr);
+}
+
+.guide-sample-body {
+  grid-template-columns: 400px minmax(0, 1fr);
+}
+
+.view-switch {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  border: 1px solid var(--line-strong);
+}
+
+.view-switch button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 3px 6px;
+  font-family: var(--mono);
+  font-size: 9px;
+  line-height: 1.25;
+  letter-spacing: .04em;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.view-switch button + button {
+  border-left: 1px solid var(--line);
+}
+
+.view-switch button.is-active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.fig-head .view-switch {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-color: rgba(233, 224, 204, .34);
+}
+
+.fig-head .view-switch button {
+  color: rgba(233, 224, 204, .68);
+}
+
+.fig-head .view-switch button + button {
+  border-left-color: rgba(233, 224, 204, .24);
+}
+
+.fig-head .view-switch button.is-active {
+  background: var(--accent-yellow);
+  color: var(--ink);
+}
+
+.guide-sample-head .view-switch button.is-active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.view-panel[hidden] {
+  display: none;
+}
+
+.view-panel {
+  line-height: 0;
+}
+
+@keyframes three-axes-radiate {
+  from {
+    opacity: .0;
+    transform: scale(.04);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.view-panel.is-revealing .three-axes {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+  animation: three-axes-radiate .68s cubic-bezier(.2, .75, .2, 1) both;
+}
+
+.view-panel svg {
+  width: 100%;
+  height: auto;
+}
+
+.is-parallax {
+  will-change: transform;
+}
+
+.cover h1 {
+  font-size: 60px;
+}
+
+.g-hm {
+  font-size: 52px;
+}
+
+.page-title h2 {
+  font-size: 32px;
+}
+
+.colophon-top h2 {
+  font-size: 42px;
+}
+
+.colophon-mark {
+  font-size: 76px;
+}
+
+.p-head,
+.p-foot,
+.tag,
+.g-no,
+.fig-head,
+.fig figcaption,
+.g-side-head,
+.g-facts dd em,
+.g-side-note,
+.checks-head,
+.check-cell span,
+.panel-head,
+.table-note,
+.g-tail,
+.idx-header,
+.idx-note,
+.i-no,
+.i-sys em,
+.i-fam em,
+.plate-head,
+.plate-kicker,
+.plate-data span,
+.plate-foot-label,
+.lg em,
+.notation-list b,
+.guide-kicker,
+.guide-sample-head,
+.scope-line,
+.colophon-body .foot-grid h4,
+.colophon-footline,
+.file-tag,
+.stat-k,
+.view-switch button,
+.doc-head {
+  font-size: 9px;
+}
+
+.i-sys,
+.i-fam {
+  font-size: 10.4px;
+}
+
+.i-hm {
+  font-size: 23px;
+}
+
+.i-sch {
+  font-size: 15px;
+}
+
+.i-order {
+  font-size: 10.4px;
+}
+
+.char-table {
+  font-size: 10.8px;
+}
+
+.char-table thead th,
+.prod-table thead th {
+  font-size: 9px;
+}
+
+.char-table tbody th {
+  font-size: 10.2px;
+}
+
+.char-table td.basis {
+  font-size: 9.8px;
+}
+
+.prod-table {
+  font-size: 10.2px;
+}
+
+.prod-table tbody th {
+  font-size: 9.4px;
+}
+
+.table-note {
+  font-size: 9.3px;
+}
+
+.g-note p {
+  font-size: 12px;
+}
+
+.g-facts dd {
+  font-size: 12px;
+}
+
+.chip {
+  font-size: 9.4px;
+}
+
+.chip b {
+  font-size: 7.2px;
+}
+
+.check-cell b {
+  font-size: 16px;
+}
+
+.page-desc {
+  font-size: 11.5px;
+}
+
+.cover-lede {
+  font-size: 13px;
+}
+
+.cover-en {
+  font-size: 10px;
+}
+
+.cover-seq {
+  font-size: 9px;
+}
+
+.cover-register {
+  font-size: 9.2px;
+}
+
+.stat-v {
+  font-size: 25px;
+}
+
+.plate-title {
+  font-size: 27px;
+}
+
+.plate-note {
+  font-size: 9.5px;
+}
+
+.guide-col h3 {
+  font-size: 20px;
+}
+
+.guide-col p {
+  font-size: 11.2px;
+}
+
+.lg b {
+  font-size: 10.2px;
+}
+
+.notation-list li {
+  font-size: 10.5px;
+}
+
+.scope-big {
+  font-size: 38px;
+}
+
+.guide-sample-note h3 {
+  font-size: 18px;
+}
+
+.guide-sample-note p {
+  font-size: 11.2px;
+}
+
+.colophon-lede {
+  font-size: 12.5px;
+}
+
+.colophon-body .foot-grid p {
+  font-size: 10.4px;
+}
+
+.colophon-register-list {
+  font-size: 9px;
+}
+
+.colophon-register-list .r-fam {
+  font-size: 8.2px;
+}
+
+.colophon-register-note {
+  font-size: 9px;
+}
+
+.colophon-en {
+  font-size: 9px;
+}
+
+:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+@media print {
+  body {
+    display: block;
+    background: #fff;
+    overflow: visible;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .doc {
+    display: block;
+    padding: 0;
+  }
+
+  .doc-head,
+  .skip {
+    display: none;
+  }
+
+  .page-frame {
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    aspect-ratio: auto;
+    box-shadow: none;
+    break-after: page;
+    page-break-after: always;
+  }
+
+  .page-frame:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .sheet {
+    transform: scale(.844) !important;
+    border: 0;
+    box-shadow: none;
+  }
+}
+
+</style>
+</head>
+<body>
+<a class="skip" href="#index">跳到索引</a>
+<main class="doc" id="top">
+  <header class="doc-head">
+    <a class="doc-brand" href="#cover">PG<span class="slash">/</span>11</a>
+    <div class="doc-title">第一类 / 第二类点群 <span>POINT GROUPS / FIRST &amp; SECOND KIND</span></div>
+    <div class="doc-meta">A4 PORTRAIT · 24 PAGES · 2026</div>
+  </header>
+
+  <div class="page-frame" id="cover">
+    <section class="sheet cover" aria-labelledby="cover-title">
+      <div class="cover-deco" id="coverDeco" aria-hidden="true"></div>
+      <header class="p-head">
+        <span class="ph-left">PG/11 — CRYSTALLOGRAPHIC ATLAS</span>
+        <span class="ph-mid">FILE 11 / PROPER ROTATIONS</span>
+        <span class="ph-right">01 / 24</span>
+      </header>
+      <div class="p-body cover-body">
+        <div class="cover-intro">
+          <div class="eyebrow">
+            <span class="eyebrow-line" aria-hidden="true"></span>
+            <span>CRYSTALLOGRAPHY / 纯旋转</span>
+            <span class="file-tag">FILE 11</span>
+          </div>
+          <h1 id="cover-title">第一类点群</h1>
+          <div class="cover-spectrum" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <div class="cover-sub">
+            <div class="cover-en">Point groups<br>of the first kind</div>
+            <div class="cover-seq">1 · 2 · 3 · 4 · 6<br>222 · 32 · 422 · 622 · 23 · 432</div>
+          </div>
+          <p class="cover-lede">
+            从 32 个晶体学点群中取出的 <strong>11 个纯旋转群</strong>。以极射赤面投影记录每个群的一般位置轨道，并附上复特征标表与不可约表示直积的完整分解。另附 7 个第二类点群代表，见第二类索引。
+          </p>
+          <div class="cover-stats">
+            <div class="stat"><span class="stat-v">11</span><span class="stat-k">群 <span>/ GROUPS</span></span></div>
+            <div class="stat"><span class="stat-v">07</span><span class="stat-k">晶系 <span>/ SYSTEMS</span></span></div>
+            <div class="stat"><span class="stat-v">24</span><span class="stat-k">最高阶 <span>/ MAX ORDER</span></span></div>
+            <div class="stat"><span class="stat-v">00</span><span class="stat-k">非正当操作 <span>/ IMPROPER</span></span></div>
+          </div>
+          <div class="cover-register" aria-hidden="true">
+            <span>1</span><span>2</span><span>3</span><span>4</span><span>6</span><span>222</span><span>32</span><span>422</span><span>622</span><span>23</span><span>432</span>
+          </div>
+        </div>
+
+        <figure class="plate" aria-labelledby="plate-cap">
+          <div class="plate-head">
+            <span>STEREONET — 432 / O</span>
+            <span>FIG. 00 / COVER</span>
+          </div>
+          <div class="plate-main">
+            <div class="plate-rays" id="plateRays" aria-hidden="true"></div>
+            <div class="plate-chart" id="heroChart"></div>
+            <div class="plate-side">
+              <div class="plate-side-top">
+                <div class="plate-kicker">OCTAHEDRAL / CUBIC</div>
+                <div class="plate-title">432 <span>/ O</span></div>
+                <div class="plate-data">
+                  <div><span>ORDER</span><b>24</b></div>
+                  <div><span>CLASSES</span><b>05</b></div>
+                  <div><span>POLES</span><b>24</b></div>
+                </div>
+              </div>
+              <div class="plate-spectrum" aria-hidden="true">
+                <div class="ps-head"><span>SPECTRUM / 00</span><span>BROWN → GOLD</span></div>
+                <div class="ps-bars"><i></i><i></i><i></i><i></i></div>
+              </div>
+              <p class="plate-note">一般位置 θ 55° / φ 27°。24 个极点对应 432 群的 24 个群元素；深色面板展示上半球实心、下半球空心对映的约定。</p>
+              <div class="plate-side-bottom">
+                <span class="plate-foot-label">GENERAL POSITION · STEREONET</span>
+                <div class="plate-barcode barcode" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+          <figcaption class="sr-only" id="plate-cap">432（O）点群的极射赤面投影。图中给出对称轴与一般位置的 24 个极点，并以细抛物弧线作背景。</figcaption>
+        </figure>
+      </div>
+      <footer class="p-foot">
+        <span>POINT GROUPS OF THE FIRST KIND</span>
+        <span>11 GROUPS · 7 CRYSTAL SYSTEMS · 4 FAMILIES</span>
+        <span><a href="#second-index">SECOND KIND / 第二类 →</a></span>
+        <span>01 / 24</span>
+      </footer>
+    </section>
+  </div>
+
+  <div class="page-frame" id="index">
+    <section class="sheet" aria-labelledby="index-title">
+      <header class="p-head">
+        <span class="ph-left">INDEX / 索引</span>
+        <span class="ph-mid">11 ENTRIES · STANDARD ORDER</span>
+        <span class="ph-right">02 / 24</span>
+      </header>
+      <div class="p-body index-body">
+        <div class="page-title">
+          <div>
+            <div class="eyebrow">INDEX / 00</div>
+            <h2 id="index-title">索引</h2>
+          </div>
+          <p class="page-desc">按标准次序排列。点击任意一行，跳转至对应的极点图、复特征标表与直积分解表。</p>
+        </div>
+        <div class="idx-header" aria-hidden="true">
+          <span>No.</span>
+          <span>极点</span>
+          <span>HM</span>
+          <span>SCHÖNFLIES</span>
+          <span>晶系</span>
+          <span>群族</span>
+          <span>阶</span>
+          <span></span>
+        </div>
+        <div id="indexRows"></div>
+        <div class="idx-note">
+          <span>READ 32 AS “THREE–TWO” · 23 AS “TWO–THREE” · ALL TABLES USE COMPLEX IRREPS</span>
+          <span><a href="#second-index">SECOND KIND / 第二类点群 →</a> · <a href="#guide">READING / 读图与记号 →</a></span>
+        </div>
+      </div>
+      <footer class="p-foot">
+        <span>GENERAL POSITION θ 55° / φ 27° · LOWER HEMISPHERE OPEN</span>
+        <span>11 GROUPS / 11 PLATES</span>
+        <span>02 / 24</span>
+      </footer>
+    </section>
+  </div>
+
+  <div class="page-frame" id="guide">
+    <section class="sheet" aria-labelledby="guide-title">
+      <header class="p-head">
+        <span class="ph-left">KEY / 读图与记号</span>
+        <span class="ph-mid">READING THE PLATES / CONVENTIONS</span>
+        <span class="ph-right">03 / 24</span>
+      </header>
+      <div class="p-body guide-body">
+        <div class="page-title">
+          <div>
+            <div class="eyebrow">CONVENTIONS / A</div>
+            <h2 id="guide-title">读图与记号</h2>
+          </div>
+          <p class="page-desc">极射赤面投影、对称轴符号与表示论口径的约定。所有图以 c 轴为竖直轴，所有表取复特征标。</p>
+        </div>
+
+        <div class="guide-grid">
+          <div class="guide-col">
+            <div class="guide-kicker">01 / 极射赤面投影</div>
+            <h3>极点与轴</h3>
+            <div class="legend-grid">
+              <div class="lg">
+                <span class="lg-sym" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" fill="currentColor"/></svg>
+                </span>
+                <span><b>上半球极点</b><em>UPPER HEMISPHERE</em></span>
+              </div>
+              <div class="lg">
+                <span class="lg-sym" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.7" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+                </span>
+                <span><b>下半球极点</b><em>LOWER / ANTIPODAL</em></span>
+              </div>
+              <div class="lg">
+                <span class="lg-sym" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M12 3 Q20 12 12 21 Q4 12 12 3 Z" fill="currentColor"/></svg>
+                </span>
+                <span><b>二次轴</b><em>2-FOLD</em></span>
+              </div>
+              <div class="lg">
+                <span class="lg-sym" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><polygon points="12,3 21,19 3,19" fill="currentColor"/></svg>
+                </span>
+                <span><b>三次轴</b><em>3-FOLD</em></span>
+              </div>
+              <div class="lg">
+                <span class="lg-sym" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><rect x="5.5" y="5.5" width="13" height="13" fill="currentColor"/></svg>
+                </span>
+                <span><b>四次轴</b><em>4-FOLD</em></span>
+              </div>
+              <div class="lg">
+                <span class="lg-sym" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><polygon points="12,2.5 20.2,7.25 20.2,16.75 12,21.5 3.8,16.75 3.8,7.25" fill="currentColor"/></svg>
+                </span>
+                <span><b>六次轴</b><em>6-FOLD</em></span>
+              </div>
+            </div>
+            <p>中心的多边形表示垂直于纸面的主轴；面内二次轴画成横贯圆面的双箭头，斜置轴则以一条到中心的短虚线加轴符号标出。空心圆示于下半球极点的对映位置。        一般位置取 θ 55°、φ 27°，其轨道点数等于群阶。第二类点群的极射图另以蓝色画出反射面与反演中心；旋转反演轴与同线旋转轴共线，列于类标签。</p>
+
+            <div class="guide-kicker">02 / 记号</div>
+            <h3>两种符号系统</h3>
+            <ul class="notation-list">
+              <li><b>HM</b><span>1 · 2 · 3 · 4 · 6 · 222 · 32 · 422 · 622 · 23 · 432</span></li>
+              <li><b>Schönflies</b><span>C₁ … C₆ · D₂ … D₆ · T · O</span></li>
+              <li><b>读法</b><span>“32” 与 “23” 是两位符号，分别读作“三–二”与“二–三”，不是三十二与二十三。</span></li>
+              <li><b>阶</b><span>|G| = 群元素数 = 一般位置轨道中的极点数。</span></li>
+              <li><b>类别</b><span>第一类 ⇔ 全部操作的行列式为 +1；不含镜面 m、反演与旋转反演。</span></li>
+            </ul>
+          </div>
+
+          <div class="guide-col">
+            <div class="guide-kicker">03 / 范围与口径</div>
+            <h3>纯旋转子集</h3>
+            <div class="scope-big">11 <span>/ 32</span></div>
+            <div class="scope-line"><span>晶系 / SYSTEMS</span><b>07</b></div>
+            <div class="scope-line"><span>群族 / FAMILIES</span><b>04</b></div>
+            <div class="scope-line"><span>最高阶 / MAX ORDER</span><b>24</b></div>
+            <p>32 个晶体学点群中，只有 11 个完全由纯旋转构成。环、双面、四面体与八面体四族覆盖了三斜到立方的全部七个晶系。</p>
+            <p>所有表采用复不可约表示。复型 E 在 C₃、C₄、C₆ 与 T 中分裂为共轭的一维复表示 E⁺/E⁻；在 D₃、D₄、D₆ 与 O 中，E 为实型二维不可约表示，不分裂。直积按复表示分解。</p>
+            <a class="guide-link" href="#index">← BACK TO INDEX / 返回索引</a>
+          </div>
+        </div>
+
+        <section class="guide-sample" aria-label="222 点群示例" data-viewer>
+          <div class="guide-sample-head">
+            <span>PLATE A / 222 — D₂</span>
+            <div class="view-switch" role="group" aria-label="视图切换">
+              <button type="button" data-view="2d" class="is-active" aria-pressed="true">2D</button>
+              <button type="button" data-view="3d" aria-pressed="false">3D</button>
+            </div>
+            <span>EXAMPLE / 示例</span>
+          </div>
+          <div class="guide-sample-body">
+            <div class="guide-sample-chart">
+              <div class="view-panel" data-panel="2d" id="guideChart"></div>
+              <div class="view-panel" data-panel="3d" id="guide3dChart" data-three-group="222" data-three-size="400" hidden></div>
+            </div>
+            <div class="guide-sample-note">
+              <h3>先读轴，再读点</h3>
+              <p>以 222（D₂）为例：中心为垂直于纸面的 C₂，两条面内 C₂ 轴以双箭头表示。四个一般位置极点给出完整轨道；实心为上半球，空心为下半球对映。每个群页都沿用这一读法，并把相同的极点数与群阶相互核对。视图上方的 2D / 3D 按钮可在极射图与三维轴视图之间切换。</p>
+            </div>
+          </div>
+        </section>
+      </div>
+      <footer class="p-foot">
+        <span>GENERAL POSITION θ 55° / φ 27°</span>
+        <span>COMPLEX CHARACTERS / E⁺ E⁻</span>
+        <span>03 / 24</span>
+      </footer>
+    </section>
+  </div>
+
+  <div id="atlasItems"></div>
+
+  <div class="page-frame" id="second-index">
+    <section class="sheet" aria-labelledby="second-title">
+      <header class="p-head">
+        <span class="ph-left">SECOND KIND / 第二类</span>
+        <span class="ph-mid">21 GROUPS · 7 FAMILY EXAMPLES</span>
+        <span class="ph-right">15 / 24</span>
+      </header>
+      <div class="p-body second-body">
+        <div class="page-title">
+          <div>
+            <div class="eyebrow">SECOND KIND / B</div>
+            <h2 id="second-title">第二类点群</h2>
+          </div>
+          <p class="page-desc">含反映、反演或旋转反演的 21 个晶体学点群。按族取 7 个代表；族构造列给出生成方式，其余 14 群列于页末。</p>
+        </div>
+        <div class="s-lede">
+          <div class="s-lede-head">
+            <span>CONSTRUCTION / 00</span>
+            <b>族构造</b>
+          </div>
+          <p>在纯旋转骨架上加入镜面、反演或旋转反演：Cₙ → Cₙₕ / Cₙᵥ，Dₙ → Dₙₕ / Dₙ𝑑，T → T𝑑，O → Oₕ；S 型由 C₂ₙ₊₁ ∪ iC₂ₙ₊₁ 生成。</p>
+          <div class="s-lede-formula">
+            <span>GENERAL / IMPROPER</span>
+            <b>C<sub>2n+1</sub> ∪ iC<sub>2n+1</sub> → S<sub>4n+2</sub></b>
+          </div>
+        </div>
+        <div class="s-idx-header" aria-hidden="true">
+          <span>No.</span>
+          <span>极点</span>
+          <span>HM</span>
+          <span>SCHÖNFLIES</span>
+          <span>晶系</span>
+          <span>群族</span>
+          <span>族构造 / CONSTRUCTION</span>
+          <span>阶</span>
+          <span>PLATE</span>
+        </div>
+        <div id="secondIndexRows"></div>
+        <div class="s-rest">
+          <div class="s-rest-head">
+            <span>其余 14 群 / REMAINING GROUPS</span>
+            <span>INDEX ONLY · 21 GROUPS TOTAL</span>
+          </div>
+          <div class="s-rest-grid" id="secondRestRows"></div>
+        </div>
+        <div class="idx-note">
+          <span>2D 投影用蓝线 / 蓝圈标出反射面与反演；3D 视图仅绘旋转轴，S 轴见类标签。</span>
+          <span><a href="#index">← 第一类索引 / FIRST KIND</a></span>
+        </div>
+      </div>
+      <footer class="p-foot">
+        <span>21 SECOND-KIND GROUPS</span>
+        <span>7 GROUPS · 8 PLATES</span>
+        <span>15 / 24</span>
+      </footer>
+    </section>
+  </div>
+
+  <div id="secondItems"></div>
+
+  <div class="page-frame" id="colophon">
+    <section class="sheet sheet-dark" aria-labelledby="colophon-title">
+      <header class="p-head">
+        <span class="ph-left">COLOPHON / 终页</span>
+        <span class="ph-mid">PG/11 — 2026</span>
+        <span class="ph-right">24 / 24</span>
+      </header>
+      <div class="p-body colophon-body">
+        <div class="colophon-top">
+          <div>
+            <div class="eyebrow">COLOPHON / END OF FILE</div>
+            <h2 id="colophon-title">第一类 / 第二类点群</h2>
+            <div class="colophon-en">POINT GROUPS / FIRST &amp; SECOND KIND / PG-11+7</div>
+          </div>
+          <div class="colophon-mark">18</div>
+        </div>
+        <p class="colophon-lede">11 个第一类纯旋转群 + 7 个第二类代表，覆盖全部 7 个晶系与 4 个群族。每一页以极射赤面投影、复特征标表与不可约表示直积分解构成一个完整的点群切片。</p>
+        <div class="foot-grid">
+          <div>
+            <h4>数据 / DATA</h4>
+            <p>International Tables for Crystallography, Vol. A；Cotton, Chemical Applications of Group Theory；Bilbao Crystallographic Server。特征标与直积分解按复不可约表示统一整理。</p>
+          </div>
+          <div>
+            <h4>投影 / PROJECTION</h4>
+            <p>极射赤面投影。上半球以实心圆表示，下半球以空心圆示于对映位置。一般位置 θ = 55°、φ = 27°，未取特殊位置。</p>
+          </div>
+          <div>
+            <h4>记号 / NOTATION</h4>
+            <p>Hermann–Mauguin 与 Schönflies 双记号。直积表中的系数 1 省略；复型 E 已分裂为 E⁺/E⁻，直积按复表示计算。32 与 23 为两位符号。</p>
+          </div>
+        </div>
+        <div class="colophon-end">
+          <figure class="colophon-plate">
+            <div class="colophon-plate-head">
+              <span>432 / O — GENERAL POSITION</span>
+              <span>24 POLES</span>
+            </div>
+            <div class="colophon-chart" id="colophonChart"></div>
+          </figure>
+          <div class="colophon-register">
+            <div class="colophon-register-head">
+              <span>ATLAS REGISTER / 图集</span>
+              <span>04—14 / 16—23</span>
+            </div>
+            <ol class="colophon-register-list" id="colophonRegister"></ol>
+            <p class="colophon-register-note">11 + 7 个代表 · 第一类 + 第二类</p>
+          </div>
+        </div>
+        <div class="colophon-barcode barcode" aria-hidden="true"></div>
+        <div class="colophon-footline">
+          <span>PG/11+7 — 2026</span>
+          <span>FIRST + SECOND KIND</span>
+          <span><a href="#cover">COVER ↑</a> · <a href="#index">INDEX ↑</a> · <a href="#second-index">SECOND ↑</a></span>
+        </div>
+      </div>
+      <footer class="p-foot">
+        <span>24 PAGES / A4 PORTRAIT</span>
+        <span>FIRST + SECOND KIND · 11 + 7</span>
+        <span>24 / 24</span>
+      </footer>
+    </section>
+  </div>
+</main>
+
+<script>
+const DEG = Math.PI / 180;
+const IDENTITY = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+const THETA = 55 * DEG;
+const PHI = 27 * DEG;
+const GENERAL_POINT = [
+  Math.sin(THETA) * Math.cos(PHI),
+  Math.sin(THETA) * Math.sin(PHI),
+  Math.cos(THETA)
+];
+
+const EPS = { re: -0.5, im: Math.sqrt(3) / 2, t: 'ε' };
+const EPS2 = { re: -0.5, im: -Math.sqrt(3) / 2, t: 'ε²' };
+const I = { re: 0, im: 1, t: 'i' };
+const NEG_I = { re: 0, im: -1, t: '−i' };
+const ZETA = { re: 0.5, im: Math.sqrt(3) / 2, t: 'ζ' };
+const ZETA2 = { re: -0.5, im: Math.sqrt(3) / 2, t: 'ζ²' };
+const ZETA4 = { re: -0.5, im: -Math.sqrt(3) / 2, t: 'ζ⁴' };
+const ZETA5 = { re: 0.5, im: -Math.sqrt(3) / 2, t: 'ζ⁵' };
+
+const GROUPS = [
+  {
+    no: '01',
+    hm: '1',
+    sch: 'C₁',
+    family: '循环群',
+    familyEn: 'CYCLIC',
+    familyShort: 'Cₙ',
+    system: '三斜',
+    systemEn: 'TRICLINIC',
+    order: 1,
+    gen: 'E',
+    note: '只有恒等操作。所有方向、所有函数都属于同一个不可约表示 A；这也是三斜晶系中唯一不含任何旋转的群。',
+    classes: [
+      { label: 'E', size: 1 }
+    ],
+    irreps: [
+      { name: 'A', chars: [1], basis: 'x, y, z, x², y², z², xy, xz, yz' }
+    ],
+    gens: [],
+    axes: []
+  },
+  {
+    no: '02',
+    hm: '2',
+    sch: 'C₂',
+    family: '循环群',
+    familyEn: 'CYCLIC',
+    familyShort: 'Cₙ',
+    system: '单斜',
+    systemEn: 'MONOCLINIC',
+    order: 2,
+    gen: '⟨ C₂ᶻ ⟩',
+    note: '一条沿 c 轴的二重轴。A 表示对 C₂ 对称，B 表示反对称；两个一维表示按旋转本征值 ±1 区分。单斜晶系通常把唯一对称轴取为 b，本页统一取竖直轴。',
+    classes: [
+      { label: 'E', size: 1 },
+      { label: 'C₂', size: 1 }
+    ],
+    irreps: [
+      { name: 'A', chars: [1, 1], basis: 'z, x², y², z², xy' },
+      { name: 'B', chars: [1, -1], basis: 'x, y, xz, yz' }
+    ],
+    gens: [{ axis: [0, 0, 1], deg: 180 }],
+    axes: [{ type: 'vertical', n: 2 }]
+  },
+  {
+    no: '03',
+    hm: '3',
+    sch: 'C₃',
+    family: '循环群',
+    familyEn: 'CYCLIC',
+    familyShort: 'Cₙ',
+    system: '三方',
+    systemEn: 'TRIGONAL',
+    order: 3,
+    gen: '⟨ C₃ᶻ ⟩',
+    note: '一条三重轴，群阶为 3。采用复表示时，二维 E 分裂为共轭的一维复表示 E⁺ 与 E⁻；一般位置因此给出三个等价的极点。',
+    classes: [
+      { label: 'E', size: 1 },
+      { label: 'C₃', size: 1 },
+      { label: 'C₃²', size: 1 }
+    ],
+    irreps: [
+      { name: 'A', chars: [1, 1, 1], basis: 'z, x²+y², z², Rz' },
+      { name: 'E⁺', chars: [1, EPS, EPS2], basis: 'x+iy, xz+i yz, Rx+i Ry, (x−iy)²' },
+      { name: 'E⁻', chars: [1, EPS2, EPS], basis: 'x−iy, xz−i yz, Rx−i Ry, (x+iy)²' }
+    ],
+    gens: [{ axis: [0, 0, 1], deg: 120 }],
+    axes: [{ type: 'vertical', n: 3 }]
+  },
+  {
+    no: '04',
+    hm: '4',
+    sch: 'C₄',
+    family: '循环群',
+    familyEn: 'CYCLIC',
+    familyShort: 'Cₙ',
+    system: '四方',
+    systemEn: 'TETRAGONAL',
+    order: 4,
+    gen: '⟨ C₄ᶻ ⟩',
+    note: '四重轴同时包含 C₂ = C₄²。采用复表示时，E 分裂为 E⁺ 与 E⁻；A、B 仍为实值一维表示。四方晶系的最高第一类循环群。',
+    classes: [
+      { label: 'E', size: 1 },
+      { label: 'C₄', size: 1 },
+      { label: 'C₂', size: 1 },
+      { label: 'C₄³', size: 1 }
+    ],
+    irreps: [
+      { name: 'A', chars: [1, 1, 1, 1], basis: 'z, x²+y², z², Rz' },
+      { name: 'B', chars: [1, -1, 1, -1], basis: 'x²−y², xy' },
+      { name: 'E⁺', chars: [1, I, -1, NEG_I], basis: 'x+iy, xz+i yz, Rx+i Ry' },
+      { name: 'E⁻', chars: [1, NEG_I, -1, I], basis: 'x−iy, xz−i yz, Rx−i Ry' }
+    ],
+    gens: [{ axis: [0, 0, 1], deg: 90 }],
+    axes: [{ type: 'vertical', n: 4 }]
+  },
+  {
+    no: '05',
+    hm: '6',
+    sch: 'C₆',
+    family: '循环群',
+    familyEn: 'CYCLIC',
+    familyShort: 'Cₙ',
+    system: '六方',
+    systemEn: 'HEXAGONAL',
+    order: 6,
+    gen: '⟨ C₆ᶻ ⟩',
+    note: '六重轴包含 C₃ 与 C₂。采用复表示时，E₁、E₂ 分别分裂为 E₁⁺/E₁⁻ 与 E₂⁺/E₂⁻，对应 m = ±1、±2；六方晶系的第一类循环群。',
+    classes: [
+      { label: 'E', size: 1 },
+      { label: 'C₆', size: 1 },
+      { label: 'C₃', size: 1 },
+      { label: 'C₂', size: 1 },
+      { label: 'C₃²', size: 1 },
+      { label: 'C₆⁵', size: 1 }
+    ],
+    irreps: [
+      { name: 'A', chars: [1, 1, 1, 1, 1, 1], basis: 'z, x²+y², z², Rz' },
+      { name: 'B', chars: [1, -1, 1, -1, 1, -1], basis: '—' },
+      { name: 'E₁⁺', chars: [1, ZETA, ZETA2, -1, ZETA4, ZETA5], basis: 'x+iy, xz+i yz, Rx+i Ry' },
+      { name: 'E₁⁻', chars: [1, ZETA5, ZETA4, -1, ZETA2, ZETA], basis: 'x−iy, xz−i yz, Rx−i Ry' },
+      { name: 'E₂⁺', chars: [1, ZETA2, ZETA4, 1, ZETA2, ZETA4], basis: '(x+iy)²' },
+      { name: 'E₂⁻', chars: [1, ZETA4, ZETA2, 1, ZETA4, ZETA2], basis: '(x−iy)²' }
+    ],
+    gens: [{ axis: [0, 0, 1], deg: 60 }],
+    axes: [{ type: 'vertical', n: 6 }]
+  },
+  {
+    no: '06',
+    hm: '222',
+    sch: 'D₂',
+    family: '双面群',
+    familyEn: 'DIHEDRAL',
+    familyShort: 'Dₙ',
+    system: '正交',
+    systemEn: 'ORTHORHOMBIC',
+    order: 4,
+    gen: '⟨ C₂ᶻ, C₂ˣ ⟩',
+    note: '三个互相垂直的二重轴。所有不可约表示都是一维，按三个 C₂ 的符号组合分类；对应正交晶系的 222 群。',
+    classes: [
+      { label: 'E', size: 1 },
+      { label: 'C₂(z)', size: 1 },
+      { label: 'C₂(y)', size: 1 },
+      { label: 'C₂(x)', size: 1 }
+    ],
+    irreps: [
+      { name: 'A', chars: [1, 1, 1, 1], basis: 'x², y², z²' },
+      { name: 'B₁', chars: [1, 1, -1, -1], basis: 'z, Rz, xy' },
+      { name: 'B₂', chars: [1, -1, 1, -1], basis: 'y, Ry, xz' },
+      { name: 'B₃', chars: [1, -1, -1, 1], basis: 'x, Rx, yz' }
+    ],
+    gens: [
+      { axis: [0, 0, 1], deg: 180 },
+      { axis: [1, 0, 0], deg: 180 }
+    ],
+    axes: [
+      { type: 'vertical', n: 2 },
+      { type: 'horizontal', az: 0, n: 2 },
+      { type: 'horizontal', az: 90, n: 2 }
+    ]
+  },
+  {
+    no: '07',
+    hm: '32',
+    sch: 'D₃',
+    family: '双面群',
+    familyEn: 'DIHEDRAL',
+    familyShort: 'Dₙ',
+    system: '三方',
+    systemEn: 'TRIGONAL',
+    order: 6,
+    gen: '⟨ C₃ᶻ, C₂ˣ ⟩',
+    note: '三重轴与三条面内二重轴。E 为实型二维不可约表示，不分裂；这是三方晶系中的 32 群，也是手性空间群中常见的点群。',
+    classes: [
+      { label: 'E', size: 1 },
+      { label: '2C₃', size: 2 },
+      { label: '3C₂', size: 3 }
+    ],
+    irreps: [
+      { name: 'A₁', chars: [1, 1, 1], basis: 'x²+y², z²' },
+      { name: 'A₂', chars: [1, 1, -1], basis: 'z, Rz' },
+      { name: 'E', chars: [2, -1, 0], basis: '(x, y), (x²−y², xy), (xz, yz), (Rx, Ry)' }
+    ],
+    gens: [
+      { axis: [0, 0, 1], deg: 120 },
+      { axis: [1, 0, 0], deg: 180 }
+    ],
+    axes: [
+      { type: 'vertical', n: 3 },
+      { type: 'horizontal', az: 0, n: 2 },
+      { type: 'horizontal', az: 60, n: 2 },
+      { type: 'horizontal', az: 120, n: 2 }
+    ]
+  },
+  {
+    no: '08',
+    hm: '422',
+    sch: 'D₄',
+    family: '双面群',
+    familyEn: 'DIHEDRAL',
+    familyShort: 'Dₙ',
+    system: '四方',
+    systemEn: 'TETRAGONAL',
+    order: 8,
+    gen: '⟨ C₄ᶻ, C₂ˣ ⟩',
+    note: '四重轴与四条面内二重轴，分为 C₂′ 与 C₂″ 两组。B₁ 与 B₂ 分别由 x²−y² 与 xy 承载；E 为实型二维表示，不分裂。对应四方晶系的 422 群。',
+    classes: [
+      { label: 'E', size: 1 },
+      { label: '2C₄', size: 2 },
+      { label: 'C₂', size: 1 },
+      { label: '2C₂′', size: 2 },
+      { label: '2C₂″', size: 2 }
+    ],
+    irreps: [
+      { name: 'A₁', chars: [1, 1, 1, 1, 1], basis: 'x²+y², z²' },
+      { name: 'A₂', chars: [1, 1, 1, -1, -1], basis: 'Rz' },
+      { name: 'B₁', chars: [1, -1, 1, 1, -1], basis: 'x²−y²' },
+      { name: 'B₂', chars: [1, -1, 1, -1, 1], basis: 'xy' },
+      { name: 'E', chars: [2, 0, -2, 0, 0], basis: '(x, y), (xz, yz), (Rx, Ry)' }
+    ],
+    gens: [
+      { axis: [0, 0, 1], deg: 90 },
+      { axis: [1, 0, 0], deg: 180 }
+    ],
+    axes: [
+      { type: 'vertical', n: 4 },
+      { type: 'horizontal', az: 0, n: 2 },
+      { type: 'horizontal', az: 45, n: 2 },
+      { type: 'horizontal', az: 90, n: 2 },
+      { type: 'horizontal', az: 135, n: 2 }
+    ]
+  },
+  {
+    no: '09',
+    hm: '622',
+    sch: 'D₆',
+    family: '双面群',
+    familyEn: 'DIHEDRAL',
+    familyShort: 'Dₙ',
+    system: '六方',
+    systemEn: 'HEXAGONAL',
+    order: 12,
+    gen: '⟨ C₆ᶻ, C₂ˣ ⟩',
+    note: '六重轴与六条面内二重轴。E₁、E₂ 为实型二维表示，不分裂，可承载手性基函数；对应六方晶系的 622 群。',
+    classes: [
+      { label: 'E', size: 1 },
+      { label: '2C₆', size: 2 },
+      { label: '2C₃', size: 2 },
+      { label: 'C₂', size: 1 },
+      { label: '3C₂′', size: 3 },
+      { label: '3C₂″', size: 3 }
+    ],
+    irreps: [
+      { name: 'A₁', chars: [1, 1, 1, 1, 1, 1], basis: 'x²+y², z²' },
+      { name: 'A₂', chars: [1, 1, 1, 1, -1, -1], basis: 'Rz' },
+      { name: 'B₁', chars: [1, -1, 1, -1, 1, -1], basis: '—' },
+      { name: 'B₂', chars: [1, -1, 1, -1, -1, 1], basis: '—' },
+      { name: 'E₁', chars: [2, 1, -1, -2, 0, 0], basis: '(x, y), (xz, yz), (Rx, Ry)' },
+      { name: 'E₂', chars: [2, -1, -1, 2, 0, 0], basis: '(x²−y², xy)' }
+    ],
+    gens: [
+      { axis: [0, 0, 1], deg: 60 },
+      { axis: [1, 0, 0], deg: 180 }
+    ],
+    axes: [
+      { type: 'vertical', n: 6 },
+      { type: 'horizontal', az: 0, n: 2 },
+      { type: 'horizontal', az: 30, n: 2 },
+      { type: 'horizontal', az: 60, n: 2 },
+      { type: 'horizontal', az: 90, n: 2 },
+      { type: 'horizontal', az: 120, n: 2 },
+      { type: 'horizontal', az: 150, n: 2 }
+    ]
+  },
+  {
+    no: '10',
+    hm: '23',
+    sch: 'T',
+    family: '四面体群',
+    familyEn: 'TETRAHEDRAL',
+    familyShort: 'T',
+    system: '立方',
+    systemEn: 'CUBIC',
+    order: 12,
+    gen: '⟨ C₃[111], C₂ᶻ ⟩',
+    note: '四个沿体对角线的 C₃ 与三个沿坐标轴的 C₂，构成手性四面体群；不含镜面或反演。采用复表示时，E 分裂为 E⁺ 与 E⁻，直积按复表示分解。',
+    classes: [
+      { label: 'E', size: 1 },
+      { label: '4C₃', size: 4 },
+      { label: '4C₃²', size: 4 },
+      { label: '3C₂', size: 3 }
+    ],
+    irreps: [
+      { name: 'A', chars: [1, 1, 1, 1], basis: 'x²+y²+z²' },
+      { name: 'E⁺', chars: [1, EPS, EPS2, 1], basis: '(2z²−x²−y², x²−y²) 的复组合' },
+      { name: 'E⁻', chars: [1, EPS2, EPS, 1], basis: '(2z²−x²−y², x²−y²) 的复组合' },
+      { name: 'T', chars: [3, 0, 0, -1], basis: '(x, y, z), (xy, xz, yz), (Rx, Ry, Rz)' }
+    ],
+    gens: [
+      { axis: [1, 1, 1], deg: 120 },
+      { axis: [0, 0, 1], deg: 180 }
+    ],
+    axes: [
+      { type: 'vertical', n: 2 },
+      { type: 'horizontal', az: 0, n: 2 },
+      { type: 'horizontal', az: 90, n: 2 },
+      { type: 'inclined', dir: [1, 1, 1], n: 3 },
+      { type: 'inclined', dir: [-1, 1, 1], n: 3 },
+      { type: 'inclined', dir: [1, -1, 1], n: 3 },
+      { type: 'inclined', dir: [1, 1, -1], n: 3 }
+    ]
+  },
+  {
+    no: '11',
+    hm: '432',
+    sch: 'O',
+    family: '八面体群',
+    familyEn: 'OCTAHEDRAL',
+    familyShort: 'O',
+    system: '立方',
+    systemEn: 'CUBIC',
+    order: 24,
+    gen: '⟨ C₄ᶻ, C₃[111] ⟩',
+    note: '三个 C₄、四个 C₃ 与六个 C₂′，是 11 个第一类点群中阶最大者（24）。立方晶系的 432 群；一般位置恰好给出 24 个极点。',
+    classes: [
+      { label: 'E', size: 1 },
+      { label: '8C₃', size: 8 },
+      { label: '3C₂', size: 3 },
+      { label: '6C₄', size: 6 },
+      { label: '6C₂′', size: 6 }
+    ],
+    irreps: [
+      { name: 'A₁', chars: [1, 1, 1, 1, 1], basis: 'x²+y²+z²' },
+      { name: 'A₂', chars: [1, 1, 1, -1, -1], basis: 'xyz' },
+      { name: 'E', chars: [2, -1, 2, 0, 0], basis: '(2z²−x²−y², x²−y²)' },
+      { name: 'T₁', chars: [3, 0, -1, 1, -1], basis: '(Rx, Ry, Rz)' },
+      { name: 'T₂', chars: [3, 0, -1, -1, 1], basis: '(x, y, z), (xy, xz, yz)' }
+    ],
+    gens: [
+      { axis: [0, 0, 1], deg: 90 },
+      { axis: [1, 1, 1], deg: 120 }
+    ],
+    axes: [
+      { type: 'vertical', n: 4 },
+      { type: 'horizontal', az: 0, n: 4 },
+      { type: 'horizontal', az: 90, n: 4 },
+      { type: 'inclined', dir: [1, 1, 1], n: 3 },
+      { type: 'inclined', dir: [-1, 1, 1], n: 3 },
+      { type: 'inclined', dir: [1, -1, 1], n: 3 },
+      { type: 'inclined', dir: [1, 1, -1], n: 3 },
+      { type: 'horizontal', az: 45, n: 2 },
+      { type: 'horizontal', az: 135, n: 2 },
+      { type: 'inclined', dir: [1, 0, 1], n: 2 },
+      { type: 'inclined', dir: [-1, 0, 1], n: 2 },
+      { type: 'inclined', dir: [0, 1, 1], n: 2 },
+      { type: 'inclined', dir: [0, -1, 1], n: 2 }
+    ]
+  }
+];
+
+const SECOND_GROUPS = [
+  {
+    no: '01',
+    hm: '6̅',
+    hmHtml: '<span class="bar">6</span>',
+    sch: 'C₃h',
+    family: '水平镜面群',
+    familyEn: 'Cₙₕ',
+    familyShort: 'Cnh',
+    system: '六方',
+    systemEn: 'HEXAGONAL',
+    order: 6,
+    gen: '⟨ C₃ᶻ, σₕ ⟩',
+    mirrors: [{ normal: [0, 0, 1] }],
+    inversion: false,
+    note: '三重轴与水平镜面 σₕ；n=3 的 Cₙₕ 家族代表，六方晶系的 6̅ 群。2D 投影以蓝环标出 σₕ；3D 轴视图显示 C₃；S₃ 见群元素与特征标。',
+    classes: [
+      { label: 'E', size: 1 },
+      { label: 'C₃', size: 1 },
+      { label: 'C₃²', size: 1 },
+      { label: 'σₕ', size: 1 },
+      { label: 'S₃', size: 1 },
+      { label: 'S₃⁵', size: 1 }
+    ],
+    irreps: [
+      { name: 'A′', chars: [1, 1, 1, 1, 1, 1], basis: 'x, y, Rz, x²+y², x²−y², xy' },
+      { name: 'A″', chars: [1, 1, 1, -1, -1, -1], basis: 'z, xz, yz, Rx, Ry' },
+      { name: 'E′⁺', chars: [1, ZETA2, ZETA4, 1, ZETA2, ZETA4], basis: 'E′ 基的复组合' },
+      { name: 'E′⁻', chars: [1, ZETA4, ZETA2, 1, ZETA4, ZETA2], basis: 'E′ 基的复组合' },
+      { name: 'E″⁺', chars: [1, ZETA4, ZETA2, -1, ZETA, ZETA5], basis: 'E″ 基的复组合' },
+      { name: 'E″⁻', chars: [1, ZETA2, ZETA4, -1, ZETA5, ZETA], basis: 'E″ 基的复组合' }
+    ],
+    gens: [
+      { axis: [0, 0, 1], deg: 120 },
+      { matrix: [1, 0, 0, 0, 1, 0, 0, 0, -1] }
+    ],
+    axes: [{ type: 'vertical', n: 3 }]
+  },
+  {
+    no: '02',
+    hm: '3m',
+    sch: 'C₃v',
+    family: '镜面群',
+    familyEn: 'Cₙᵥ',
+    familyShort: 'Cnv',
+    system: '三方',
+    systemEn: 'TRIGONAL',
+    order: 6,
+    gen: '⟨ C₃ᶻ, σᵥ ⟩',
+    mirrors: [{ normal: [0, 1, 0] }, { normal: [-Math.sqrt(3) / 2, -0.5, 0] }, { normal: [Math.sqrt(3) / 2, -0.5, 0] }],
+    inversion: false,
+    note: '三重轴与三条竖直镜面；n=3 的 Cₙᵥ 家族代表，三方晶系的 3m 群。2D 投影以蓝线标出 3σᵥ；3D 轴视图显示 C₃。',
+    classes: [
+      { label: 'E', size: 1 },
+      { label: '2C₃', size: 2 },
+      { label: '3σᵥ', size: 3 }
+    ],
+    irreps: [
+      { name: 'A₁', chars: [1, 1, 1], basis: 'z, x²+y², z²' },
+      { name: 'A₂', chars: [1, 1, -1], basis: 'Rz' },
+      { name: 'E', chars: [2, -1, 0], basis: '(x, y), (x²−y², xy), (xz, yz), (Rx, Ry)' }
+    ],
+    gens: [
+      { axis: [0, 0, 1], deg: 120 },
+      { matrix: [1, 0, 0, 0, -1, 0, 0, 0, 1] }
+    ],
+    axes: [{ type: 'vertical', n: 3 }]
+  },
+  {
+    no: '03',
+    hm: '6̅m2',
+    hmHtml: '<span class="bar">6</span>m2',
+    sch: 'D₃h',
+    family: '水平双面群',
+    familyEn: 'Dₙₕ',
+    familyShort: 'Dnh',
+    system: '六方',
+    systemEn: 'HEXAGONAL',
+    order: 12,
+    gen: '⟨ C₃ᶻ, C₂ˣ, σₕ ⟩',
+    mirrors: [{ normal: [0, 0, 1] }, { normal: [0, 1, 0] }, { normal: [-Math.sqrt(3) / 2, -0.5, 0] }, { normal: [Math.sqrt(3) / 2, -0.5, 0] }],
+    inversion: false,
+    note: 'D₃ 加水平镜面 σₕ；n=3 的 Dₙₕ 家族代表，六方晶系的 6̅m2 群。2D 投影以蓝环标出 σₕ、蓝线标出 3σᵥ；3D 轴视图显示 C₃ / 3C₂；S₃ 见类标签。',
+    classes: [
+      { label: 'E', size: 1 },
+      { label: '2C₃', size: 2 },
+      { label: '3C₂′', size: 3 },
+      { label: 'σₕ', size: 1 },
+      { label: '2S₃', size: 2 },
+      { label: '3σᵥ', size: 3 }
+    ],
+    irreps: [
+      { name: 'A₁′', chars: [1, 1, 1, 1, 1, 1], basis: 'x²+y², z²' },
+      { name: 'A₂′', chars: [1, 1, -1, 1, 1, -1], basis: 'Rz' },
+      { name: 'E′', chars: [2, -1, 0, 2, -1, 0], basis: '(x, y), (x²−y², xy)' },
+      { name: 'A₁″', chars: [1, 1, 1, -1, -1, -1], basis: '—' },
+      { name: 'A₂″', chars: [1, 1, -1, -1, -1, 1], basis: 'z' },
+      { name: 'E″', chars: [2, -1, 0, -2, 1, 0], basis: '(xz, yz), (Rx, Ry)' }
+    ],
+    gens: [
+      { axis: [0, 0, 1], deg: 120 },
+      { axis: [1, 0, 0], deg: 180 },
+      { matrix: [1, 0, 0, 0, 1, 0, 0, 0, -1] }
+    ],
+    axes: [
+      { type: 'vertical', n: 3 },
+      { type: 'horizontal', az: 0, n: 2 },
+      { type: 'horizontal', az: 60, n: 2 },
+      { type: 'horizontal', az: 120, n: 2 }
+    ]
+  },
+  {
+    no: '04',
+    hm: '3̅m',
+    hmHtml: '<span class="bar">3</span>m',
+    sch: 'D₃d',
+    family: '反演双面群',
+    familyEn: 'Dₙd',
+    familyShort: 'Dnd',
+    system: '三方',
+    systemEn: 'TRIGONAL',
+    order: 12,
+    gen: '⟨ C₃ᶻ, C₂ˣ, i ⟩',
+    mirrors: [{ normal: [-0.5, Math.sqrt(3) / 2, 0] }, { normal: [-1, 0, 0] }, { normal: [-0.5, -Math.sqrt(3) / 2, 0] }],
+    inversion: true,
+    note: 'D₃ 加反演中心；n=3 的 Dₙd 家族代表，三方晶系的 3̅m 群。2D 投影以蓝圈标出 i、蓝线标出 3σd；3D 轴视图显示 C₃ / 3C₂；S₆ 见类标签。',
+    classes: [
+      { label: 'E', size: 1 },
+      { label: '2C₃', size: 2 },
+      { label: '3C₂′', size: 3 },
+      { label: 'i', size: 1 },
+      { label: '2S₆', size: 2 },
+      { label: '3σd', size: 3 }
+    ],
+    irreps: [
+      { name: 'A₁g', chars: [1, 1, 1, 1, 1, 1], basis: 'x²+y², z²' },
+      { name: 'A₂g', chars: [1, 1, -1, 1, 1, -1], basis: 'Rz' },
+      { name: 'Eg', chars: [2, -1, 0, 2, -1, 0], basis: '(x²−y², xy), (xz, yz), (Rx, Ry)' },
+      { name: 'A₁u', chars: [1, 1, 1, -1, -1, -1], basis: '—' },
+      { name: 'A₂u', chars: [1, 1, -1, -1, -1, 1], basis: 'z' },
+      { name: 'Eu', chars: [2, -1, 0, -2, 1, 0], basis: '(x, y)' }
+    ],
+    gens: [
+      { axis: [0, 0, 1], deg: 120 },
+      { axis: [1, 0, 0], deg: 180 },
+      { matrix: [-1, 0, 0, 0, -1, 0, 0, 0, -1] }
+    ],
+    axes: [
+      { type: 'vertical', n: 3 },
+      { type: 'horizontal', az: 0, n: 2 },
+      { type: 'horizontal', az: 60, n: 2 },
+      { type: 'horizontal', az: 120, n: 2 }
+    ]
+  },
+  {
+    no: '05',
+    hm: '3̅',
+    hmHtml: '<span class="bar">3</span>',
+    sch: 'S₆',
+    family: '反演循环群',
+    familyEn: 'S₂ₙ',
+    familyShort: 'S2n',
+    system: '三方',
+    systemEn: 'TRIGONAL',
+    order: 6,
+    gen: '⟨ C₃ᶻ, i ⟩',
+    mirrors: [],
+    inversion: true,
+    note: 'S₆ = C₃i；S₂ₙ 家族 n=3 代表，三方晶系的 3̅ 群。含反演 i 与 S₆ 轴；2D 投影以蓝圈标出 i；3D 轴视图显示 C₃；S₆ 见类标签。',
+    classes: [
+      { label: 'E', size: 1 },
+      { label: 'C₃', size: 1 },
+      { label: 'C₃²', size: 1 },
+      { label: 'i', size: 1 },
+      { label: 'S₆', size: 1 },
+      { label: 'S₆⁵', size: 1 }
+    ],
+    irreps: [
+      { name: 'Ag', chars: [1, 1, 1, 1, 1, 1], basis: 'x²+y², z², Rz' },
+      { name: 'Au', chars: [1, 1, 1, -1, -1, -1], basis: 'z' },
+      { name: 'Eg⁺', chars: [1, ZETA4, ZETA2, 1, ZETA2, ZETA4], basis: 'Eg 基的复组合' },
+      { name: 'Eg⁻', chars: [1, ZETA2, ZETA4, 1, ZETA4, ZETA2], basis: 'Eg 基的复组合' },
+      { name: 'Eu⁺', chars: [1, ZETA2, ZETA4, -1, ZETA, ZETA5], basis: 'Eu 基的复组合' },
+      { name: 'Eu⁻', chars: [1, ZETA4, ZETA2, -1, ZETA5, ZETA], basis: 'Eu 基的复组合' }
+    ],
+    gens: [
+      { axis: [0, 0, 1], deg: 120 },
+      { matrix: [-1, 0, 0, 0, -1, 0, 0, 0, -1] }
+    ],
+    axes: [{ type: 'vertical', n: 3 }]
+  },
+  {
+    no: '06',
+    hm: '4̅3m',
+    hmHtml: '<span class="bar">4</span>3m',
+    sch: 'Td',
+    family: '四面体群',
+    familyEn: 'TETRAHEDRAL',
+    familyShort: 'Td',
+    system: '立方',
+    systemEn: 'CUBIC',
+    order: 24,
+    gen: '⟨ C₃[111], S₄ᶻ ⟩',
+    mirrors: [{ normal: [1, 1, 0] }, { normal: [1, -1, 0] }, { normal: [1, 0, 1] }, { normal: [1, 0, -1] }, { normal: [0, 1, 1] }, { normal: [0, 1, -1] }],
+    inversion: false,
+    note: '四个 C₃、三个 S₄ 与六个 σd；第二类立方群 4̅3m。2D 投影以蓝线标出 6σd；3D 轴视图显示 C₃ / C₂；S₄ 见类标签。',
+    classes: [
+      { label: 'E', size: 1 },
+      { label: '8C₃', size: 8 },
+      { label: '3C₂', size: 3 },
+      { label: '6S₄', size: 6 },
+      { label: '6σd', size: 6 }
+    ],
+    irreps: [
+      { name: 'A₁', chars: [1, 1, 1, 1, 1], basis: 'x²+y²+z²' },
+      { name: 'A₂', chars: [1, 1, 1, -1, -1], basis: 'xyz' },
+      { name: 'E', chars: [2, -1, 2, 0, 0], basis: '(2z²−x²−y², x²−y²)' },
+      { name: 'T₁', chars: [3, 0, -1, 1, -1], basis: '(Rx, Ry, Rz)' },
+      { name: 'T₂', chars: [3, 0, -1, -1, 1], basis: '(x, y, z), (xy, xz, yz)' }
+    ],
+    gens: [
+      { axis: [1, 1, 1], deg: 120 },
+      { matrix: [0, -1, 0, 1, 0, 0, 0, 0, -1] }
+    ],
+    axes: [
+      { type: 'vertical', n: 2 },
+      { type: 'horizontal', az: 0, n: 2 },
+      { type: 'horizontal', az: 90, n: 2 },
+      { type: 'inclined', dir: [1, 1, 1], n: 3 },
+      { type: 'inclined', dir: [-1, 1, 1], n: 3 },
+      { type: 'inclined', dir: [1, -1, 1], n: 3 },
+      { type: 'inclined', dir: [1, 1, -1], n: 3 }
+    ]
+  },
+  {
+    no: '07',
+    hm: 'm3̅m',
+    hmHtml: 'm<span class="bar">3</span>m',
+    sch: 'Oh',
+    family: '八面体群',
+    familyEn: 'OCTAHEDRAL',
+    familyShort: 'Oh',
+    system: '立方',
+    systemEn: 'CUBIC',
+    order: 48,
+    gen: '⟨ C₄ᶻ, C₃[111], i ⟩',
+    mirrors: [{ normal: [1, 0, 0] }, { normal: [0, 1, 0] }, { normal: [0, 0, 1] }, { normal: [1, 1, 0] }, { normal: [1, -1, 0] }, { normal: [1, 0, 1] }, { normal: [1, 0, -1] }, { normal: [0, 1, 1] }, { normal: [0, 1, -1] }],
+    inversion: true,
+    note: 'O 加反演中心；48 阶的第二类立方群 m3̅m。2D 投影以蓝圈标出 i、蓝线标出 3σₕ + 6σd；3D 轴视图显示 13 条旋转轴；S₄ / S₆ 见类标签。',
+    classes: [
+      { label: 'E', size: 1 },
+      { label: '8C₃', size: 8 },
+      { label: '3C₂', size: 3 },
+      { label: '6C₄', size: 6 },
+      { label: '6C₂′', size: 6 },
+      { label: 'i', size: 1 },
+      { label: '8S₆', size: 8 },
+      { label: '3σₕ', size: 3 },
+      { label: '6S₄', size: 6 },
+      { label: '6σd', size: 6 }
+    ],
+    irreps: [
+      { name: 'A₁g', chars: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1], basis: 'x²+y²+z²' },
+      { name: 'A₂g', chars: [1, 1, 1, -1, -1, 1, 1, 1, -1, -1], basis: '—' },
+      { name: 'Eg', chars: [2, -1, 2, 0, 0, 2, -1, 2, 0, 0], basis: '(2z²−x²−y², x²−y²)' },
+      { name: 'T₁g', chars: [3, 0, -1, 1, -1, 3, 0, -1, 1, -1], basis: '(Rx, Ry, Rz)' },
+      { name: 'T₂g', chars: [3, 0, -1, -1, 1, 3, 0, -1, -1, 1], basis: '(xy, xz, yz)' },
+      { name: 'A₁u', chars: [1, 1, 1, 1, 1, -1, -1, -1, -1, -1], basis: '—' },
+      { name: 'A₂u', chars: [1, 1, 1, -1, -1, -1, -1, -1, 1, 1], basis: 'xyz' },
+      { name: 'Eu', chars: [2, -1, 2, 0, 0, -2, 1, -2, 0, 0], basis: '—' },
+      { name: 'T₁u', chars: [3, 0, -1, 1, -1, -3, 0, 1, -1, 1], basis: '(x, y, z)' },
+      { name: 'T₂u', chars: [3, 0, -1, -1, 1, -3, 0, 1, 1, -1], basis: '—' }
+    ],
+    gens: [
+      { axis: [0, 0, 1], deg: 90 },
+      { axis: [1, 1, 1], deg: 120 },
+      { matrix: [-1, 0, 0, 0, -1, 0, 0, 0, -1] }
+    ],
+    axes: [
+      { type: 'vertical', n: 4 },
+      { type: 'horizontal', az: 0, n: 4 },
+      { type: 'horizontal', az: 90, n: 4 },
+      { type: 'inclined', dir: [1, 1, 1], n: 3 },
+      { type: 'inclined', dir: [-1, 1, 1], n: 3 },
+      { type: 'inclined', dir: [1, -1, 1], n: 3 },
+      { type: 'inclined', dir: [1, 1, -1], n: 3 },
+      { type: 'horizontal', az: 45, n: 2 },
+      { type: 'horizontal', az: 135, n: 2 },
+      { type: 'inclined', dir: [1, 0, 1], n: 2 },
+      { type: 'inclined', dir: [-1, 0, 1], n: 2 },
+      { type: 'inclined', dir: [0, 1, 1], n: 2 },
+      { type: 'inclined', dir: [0, -1, 1], n: 2 }
+    ]
+  }
+];
+
+const orbitCache = new Map();
+
+function matrixKey(m) {
+  return m.map(v => v.toFixed(5)).join(',');
+}
+
+function normalize(v) {
+  const n = Math.hypot(v[0], v[1], v[2]);
+  return [v[0] / n, v[1] / n, v[2] / n];
+}
+
+function rotationMatrix(axis, deg) {
+  const [x, y, z] = normalize(axis);
+  const a = deg * DEG;
+  const c = Math.cos(a);
+  const s = Math.sin(a);
+  const t = 1 - c;
+  return [
+    t * x * x + c,
+    t * x * y - s * z,
+    t * x * z + s * y,
+    t * x * y + s * z,
+    t * y * y + c,
+    t * y * z - s * x,
+    t * x * z - s * y,
+    t * y * z + s * x,
+    t * z * z + c
+  ];
+}
+
+function multiplyMatrix(a, b) {
+  const out = new Array(9);
+  for (let r = 0; r < 3; r += 1) {
+    for (let c = 0; c < 3; c += 1) {
+      out[r * 3 + c] =
+        a[r * 3] * b[c] +
+        a[r * 3 + 1] * b[3 + c] +
+        a[r * 3 + 2] * b[6 + c];
+    }
+  }
+  return out;
+}
+
+function applyMatrix(m, v) {
+  return [
+    m[0] * v[0] + m[1] * v[1] + m[2] * v[2],
+    m[3] * v[0] + m[4] * v[1] + m[5] * v[2],
+    m[6] * v[0] + m[7] * v[1] + m[8] * v[2]
+  ];
+}
+
+function generateGroup(gens) {
+  if (!gens.length) return [IDENTITY];
+  const generators = gens.map(g => g.matrix ? g.matrix.slice() : rotationMatrix(g.axis, g.deg));
+  const elements = [IDENTITY];
+  const seen = new Set([matrixKey(IDENTITY)]);
+  let frontier = [IDENTITY];
+  while (frontier.length) {
+    const next = [];
+    for (const base of frontier) {
+      for (const generator of generators) {
+        const m = multiplyMatrix(generator, base);
+        const key = matrixKey(m);
+        if (!seen.has(key)) {
+          seen.add(key);
+          elements.push(m);
+          next.push(m);
+        }
+      }
+    }
+    frontier = next;
+  }
+  return elements;
+}
+
+function orbitPoints(group) {
+  if (orbitCache.has(group.hm)) return orbitCache.get(group.hm);
+  const elements = generateGroup(group.gens);
+  const points = [];
+  for (const m of elements) {
+    const q = applyMatrix(m, GENERAL_POINT);
+    if (!points.some(p => Math.hypot(p[0] - q[0], p[1] - q[1], p[2] - q[2]) < 1e-5)) {
+      points.push(q);
+    }
+  }
+  orbitCache.set(group.hm, points);
+  return points;
+}
+
+function projectDirection(v) {
+  let x = v[0];
+  let y = v[1];
+  let z = v[2];
+  const upper = z >= 0;
+  if (!upper) {
+    x = -x;
+    y = -y;
+    z = -z;
+  }
+  return {
+    r: Math.hypot(x, y) / (1 + z),
+    a: Math.atan2(y, x),
+    upper
+  };
+}
+
+function fmtChar(v) {
+  return v < 0 ? '−' + Math.abs(v) : String(v);
+}
+
+function charValue(ch) {
+  return typeof ch === 'number' ? { re: ch, im: 0 } : ch;
+}
+
+function charConj(ch) {
+  const value = charValue(ch);
+  return { re: value.re, im: -value.im };
+}
+
+function charMul(a, b) {
+  const x = charValue(a);
+  const y = charValue(b);
+  return {
+    re: x.re * y.re - x.im * y.im,
+    im: x.re * y.im + x.im * y.re
+  };
+}
+
+function charDisplay(ch) {
+  return typeof ch === 'number' ? fmtChar(ch) : ch.t;
+}
+
+function irrepNorm(group, irrep) {
+  let sum = 0;
+  group.classes.forEach((c, i) => {
+    const value = charValue(irrep.chars[i]);
+    sum += c.size * (value.re * value.re + value.im * value.im);
+  });
+  return sum / group.order;
+}
+
+function decompose(group, a, b) {
+  return group.irreps
+    .map(irrep => {
+      let real = 0;
+      let imag = 0;
+      group.classes.forEach((c, i) => {
+        const product = charMul(a.chars[i], b.chars[i]);
+        const conj = charConj(irrep.chars[i]);
+        real += c.size * (product.re * conj.re - product.im * conj.im);
+        imag += c.size * (product.re * conj.im + product.im * conj.re);
+      });
+      return { irrep, multiplicity: Math.round(real / group.order), imag };
+    })
+    .filter(item => item.multiplicity !== 0);
+}
+
+function productLabel(group, a, b) {
+  return decompose(group, a, b)
+    .map(item => (item.multiplicity === 1 ? item.irrep.name : item.multiplicity + item.irrep.name))
+    .join(' + ');
+}
+
+function glyph(n, x, y, s, color) {
+  if (n === 2) {
+    const d = `M ${x} ${y - s} Q ${x + s * 1.08} ${y} ${x} ${y + s} Q ${x - s * 1.08} ${y} ${x} ${y - s} Z`;
+    return `<path d="${d}" fill="${color}"/>`;
+  }
+  if (n === 3) {
+    const pts = [
+      [x, y - s * 1.15],
+      [x + s * 1.05, y + s * 0.75],
+      [x - s * 1.05, y + s * 0.75]
+    ].map(p => p[0] + ',' + p[1]).join(' ');
+    return `<polygon points="${pts}" fill="${color}"/>`;
+  }
+  if (n === 4) {
+    const h = s * 0.94;
+    return `<rect x="${x - h}" y="${y - h}" width="${h * 2}" height="${h * 2}" fill="${color}"/>`;
+  }
+  if (n === 6) {
+    const pts = [];
+    for (let i = 0; i < 6; i += 1) {
+      const a = (i * 60 - 90) * DEG;
+      pts.push((x + s * Math.cos(a)) + ',' + (y + s * Math.sin(a)));
+    }
+    return `<polygon points="${pts.join(' ')}" fill="${color}"/>`;
+  }
+  return '';
+}
+
+function arrowHead(x, y, ux, uy, color) {
+  const length = 7;
+  const wing = 3.8;
+  const bx = x - ux * length;
+  const by = y - uy * length;
+  const nx = -uy;
+  const ny = ux;
+  return `<path d="M ${bx + nx * wing} ${by + ny * wing} L ${x} ${y} L ${bx - nx * wing} ${by - ny * wing}" fill="none" stroke="${color}" stroke-width="1.15" stroke-linecap="round"/>`;
+}
+
+function axesMarkup(group, cx, cy, R, theme, size, mini) {
+  if (mini) return '';
+  const glyphScale = size * 0.023;
+  let lines = '';
+  let marks = '';
+  let center = null;
+  for (const axis of group.axes) {
+    if (axis.type === 'vertical') {
+      center = axis.n;
+    } else if (axis.type === 'horizontal') {
+      const a = axis.az * DEG;
+      const ux = Math.cos(a);
+      const uy = -Math.sin(a);
+      const edge = R * (axis.n === 2 ? 0.985 : 0.935);
+      const x1 = cx + ux * edge;
+      const y1 = cy + uy * edge;
+      const x2 = cx - ux * edge;
+      const y2 = cy - uy * edge;
+      lines += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${theme.accent}" stroke-opacity=".33" stroke-width=".68" stroke-dasharray="2 4"/>`;
+      if (axis.n === 2) {
+        marks += arrowHead(x1, y1, ux, uy, theme.accent);
+        marks += arrowHead(x2, y2, -ux, -uy, theme.accent);
+      } else {
+        marks += glyph(axis.n, x1, y1, glyphScale * 0.72, theme.accent);
+        marks += glyph(axis.n, x2, y2, glyphScale * 0.72, theme.accent);
+      }
+    } else if (axis.type === 'inclined') {
+      const projected = projectDirection(normalize(axis.dir));
+      const x = cx + Math.cos(projected.a) * projected.r * R;
+      const y = cy - Math.sin(projected.a) * projected.r * R;
+      lines += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${theme.accent}" stroke-opacity=".29" stroke-width=".62" stroke-dasharray="1.5 3"/>`;
+      marks += glyph(axis.n, x, y, glyphScale * 0.66, theme.accent);
+    }
+  }
+  let out = `<g class="axes"><g class="axis-lines">${lines}</g><g class="axis-marks">${marks}</g>`;
+  if (center !== null) {
+    out += `<circle cx="${cx}" cy="${cy}" r="${glyphScale * 1.55}" fill="${theme.bg}" stroke="${theme.soft}" stroke-width=".65"/>`;
+    out += glyph(center, cx, cy, glyphScale * 1.12, theme.accent);
+  }
+  out += '</g>';
+  return out;
+}
+
+function plateRaysMarkup(width, height, cx, cy, R) {
+  const rays = [
+    ['#F3D16D', .55, 1.05, ''],
+    ['#F6E6B7', .5, .8, '2 10'],
+    ['#E9B85B', .62, .95, ''],
+    ['#E69A55', .52, .7, '1 8'],
+    ['#F3D16D', .58, 1.15, ''],
+    ['#D97B4C', .46, .75, '3 11'],
+    ['#F6E6B7', .52, .8, ''],
+    ['#E9B85B', .6, 1, ''],
+    ['#F0C95C', .55, .7, '2 9'],
+    ['#E69A55', .5, .95, ''],
+    ['#F6E6B7', .48, .75, ''],
+    ['#E9B85B', .6, 1.1, ''],
+    ['#D97B4C', .45, .7, '1 7']
+  ];
+  const ox = -width * 0.025;
+  const oy = height * 1.04;
+  const maxX = width;
+  const minY = 0;
+  const diagAt = x => height - (height / width) * x;
+  const softFilter = 'plate-dof-soft';
+  const midFilter = 'plate-dof-mid';
+  const wideFilter = 'plate-dof-wide';
+  const tailFilters = [softFilter, midFilter, wideFilter];
+  const tailStops = [
+    [.66, 1.6, .42],
+    [.8, 3, .22],
+    [.89, 5.8, .125]
+  ];
+  function tailPath(t0, mx, my, ex, ey) {
+    const ax = ox + (mx - ox) * t0;
+    const ay = oy + (my - oy) * t0;
+    const bx = mx + (ex - mx) * t0;
+    const by = my + (ey - my) * t0;
+    const qx = ax + (bx - ax) * t0;
+    const qy = ay + (by - ay) * t0;
+    return `M ${qx.toFixed(2)} ${qy.toFixed(2)} Q ${bx.toFixed(2)} ${by.toFixed(2)} ${ex.toFixed(2)} ${ey.toFixed(2)}`;
+  }
+  let gradients = '';
+  let paths = '';
+  rays.forEach(([color, opacity, lineWidth, dash], i) => {
+    const angle = (2 + (i / (rays.length - 1)) * 86) * DEG;
+    const length = Math.hypot(width, height) * 1.55;
+    const rawX = ox + Math.cos(angle) * length;
+    const rawY = oy - Math.sin(angle) * length;
+    let t = 1;
+    if (rawX > maxX) t = Math.min(t, (maxX - ox) / (rawX - ox));
+    if (rawY < minY) t = Math.min(t, (minY - oy) / (rawY - oy));
+    const ex = ox + (rawX - ox) * t;
+    const ey = oy + (rawY - oy) * t;
+    const bow = (i % 2 === 0 ? 1 : -1) * (70 + 64 * Math.sin((i / (rays.length - 1)) * Math.PI));
+    const mx = ox + (ex - ox) * 0.42 + Math.sin(angle) * bow;
+    const my = oy + (ey - oy) * 0.42 + Math.cos(angle) * bow;
+    const above = ey < diagAt(ex);
+    const dim = above ? .55 : 1;
+    const thin = above ? .8 : 1;
+    const op = opacity * dim;
+    const lineW = lineWidth * thin;
+    const gradientId = `plate-ray-grad-${i}`;
+    const dashAttr = dash ? ` stroke-dasharray="${dash}"` : '';
+    gradients += `<linearGradient id="${gradientId}" gradientUnits="userSpaceOnUse" x1="${ox.toFixed(2)}" y1="${oy.toFixed(2)}" x2="${ex.toFixed(2)}" y2="${ey.toFixed(2)}">
+      <stop offset="0" stop-color="${color}" stop-opacity=".06"/>
+      <stop offset=".18" stop-color="${color}" stop-opacity="${op.toFixed(3)}"/>
+      <stop offset=".55" stop-color="${color}" stop-opacity="${op.toFixed(3)}"/>
+      <stop offset=".72" stop-color="${color}" stop-opacity="${(op * .62).toFixed(3)}"/>
+      <stop offset=".86" stop-color="${color}" stop-opacity="${(op * .3).toFixed(3)}"/>
+      <stop offset=".96" stop-color="${color}" stop-opacity="${(op * .08).toFixed(3)}"/>
+      <stop offset="1" stop-color="${color}" stop-opacity=".015"/>
+    </linearGradient>`;
+    paths += `<path d="M ${ox.toFixed(2)} ${oy.toFixed(2)} Q ${mx.toFixed(2)} ${my.toFixed(2)} ${ex.toFixed(2)} ${ey.toFixed(2)}" stroke="url(#${gradientId})" stroke-width="${lineW.toFixed(2)}" stroke-linecap="round"${dashAttr}/>`;
+    tailStops.forEach(([t0, widthFactor, opacityFactor], layer) => {
+      paths += `<path d="${tailPath(t0, mx, my, ex, ey)}" stroke="url(#${gradientId})" stroke-opacity="${opacityFactor}" stroke-width="${(lineW * widthFactor).toFixed(2)}" stroke-linecap="round" filter="url(#${tailFilters[layer]})"/>`;
+    });
+  });
+  const stars = [
+    [64, 86, 1.2], [148, 42, .9], [612, 66, 1.1], [812, 96, 1.2],
+    [828, 320, 1], [736, 548, 1.2], [540, 586, 1], [96, 540, 1.1],
+    [62, 310, 1.2], [196, 140, .9], [470, 88, 1], [660, 430, .9],
+    [760, 210, .8], [500, 540, .8]
+  ];
+  let out = `<svg viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <defs>
+      <mask id="plate-rays-mask" maskUnits="userSpaceOnUse"><rect width="${width}" height="${height}" fill="white"/><circle cx="${cx}" cy="${cy}" r="${R + 2}" fill="black"/></mask>
+      <filter id="${softFilter}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="1.2"/></filter>
+      <filter id="${midFilter}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.6"/></filter>
+      <filter id="${wideFilter}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="4.8"/></filter>
+      ${gradients}
+    </defs>
+    <g mask="url(#plate-rays-mask)" fill="none">${paths}
+      <circle cx="${cx}" cy="${cy}" r="${R + 21}" stroke="#D8B77A" stroke-opacity=".16" stroke-dasharray="1 7" stroke-width=".7" fill="none"/>
+    </g>`;
+  for (const [x, y, r] of stars) {
+    out += `<circle cx="${x}" cy="${y}" r="${r}" fill="#E8DFCB" fill-opacity=".45"/>`;
+  }
+  out += `<path d="M 32 34 h 13 M 38.5 27.5 v 13" stroke="#E8DFCB" stroke-opacity=".3" stroke-width=".8" fill="none"/>`;
+  out += `<path d="M ${width - 48} ${height - 48} h 13 M ${width - 41.5} ${height - 54.5} v 13" stroke="#E8DFCB" stroke-opacity=".3" stroke-width=".8" fill="none"/>`;
+  out += '</svg>';
+  return out;
+}
+
+function mirrorPlanesMarkup(group, cx, cy, R, theme) {
+  const mirrors = group.mirrors || [];
+  const hasInversion = !!group.inversion;
+  if (!mirrors.length && !hasInversion) return '';
+  let out = '<g class="mirror-planes">';
+  for (const mirror of mirrors) {
+    const n = normalize(mirror.normal);
+    if (Math.abs(n[2]) > 0.9999) {
+      out += `<circle cx="${cx}" cy="${cy}" r="${R - 2.2}" fill="none" stroke="${theme.plane}" stroke-width="1.05" stroke-dasharray="5 4" opacity=".9"/>`;
+      continue;
+    }
+    let u = [-n[1], n[0], 0];
+    const uLength = Math.hypot(u[0], u[1]);
+    if (uLength < 1e-8) {
+      u = [1, 0, 0];
+    } else {
+      u = [u[0] / uLength, u[1] / uLength, 0];
+    }
+    let v = crossProduct(n, u);
+    if (v[2] < 0) v = [-v[0], -v[1], -v[2]];
+    const points = [];
+    const steps = 72;
+    for (let i = 0; i <= steps; i += 1) {
+      const t = (i / steps) * Math.PI;
+      const px = u[0] * Math.cos(t) + v[0] * Math.sin(t);
+      const py = u[1] * Math.cos(t) + v[1] * Math.sin(t);
+      const pz = u[2] * Math.cos(t) + v[2] * Math.sin(t);
+      const r = Math.hypot(px, py) / (1 + pz);
+      const a = Math.atan2(py, px);
+      points.push((cx + Math.cos(a) * r * R).toFixed(2) + ',' + (cy - Math.sin(a) * r * R).toFixed(2));
+    }
+    out += `<polyline points="${points.join(' ')}" fill="none" stroke="${theme.plane}" stroke-width="1.05" stroke-dasharray="5 4" opacity=".82"/>`;
+  }
+  if (hasInversion) {
+    out += `<circle cx="${cx}" cy="${cy}" r="${R * 0.07}" fill="none" stroke="${theme.plane}" stroke-width="1.15" stroke-dasharray="2 3" opacity=".95"/>`;
+    out += `<text x="${cx + R * 0.12}" y="${cy + R * 0.17}" font-family="Consolas, monospace" font-size="${R * 0.05}" fill="${theme.plane}">i</text>`;
+  }
+  out += '</g>';
+  return out;
+}
+
+function coverFanMarkup() {
+  const size = 520;
+  const ox = -30;
+  const oy = 540;
+  const colors = ['#5D3024', '#93422E', '#C4663F', '#D9995A'];
+  let paths = '';
+  for (let i = 0; i < 11; i += 1) {
+    const t = i / 10;
+    const angle = (4 + t * 82) * DEG;
+    const length = size * 1.7;
+    const ex = ox + Math.cos(angle) * length;
+    const ey = oy - Math.sin(angle) * length;
+    const bow = (i % 2 === 0 ? 1 : -1) * (55 + 55 * Math.sin(t * Math.PI));
+    const mx = ox + (ex - ox) * 0.43 + Math.sin(angle) * bow;
+    const my = oy + (ey - oy) * 0.43 + Math.cos(angle) * bow;
+    const color = colors[i % colors.length];
+    const opacity = (0.1 + (i % 4) * 0.03).toFixed(3);
+    const dash = i % 4 === 0 ? ' stroke-dasharray="2 10"' : i % 5 === 0 ? ' stroke-dasharray="1 8"' : '';
+    paths += `<path d="M ${ox} ${oy} Q ${mx.toFixed(2)} ${my.toFixed(2)} ${ex.toFixed(2)} ${ey.toFixed(2)}" stroke="${color}" stroke-opacity="${opacity}" stroke-width="${i % 3 === 0 ? 0.9 : 0.65}"${dash}/>`;
+  }
+  return `<svg class="cover-fan" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" fill="none">${paths}</svg>`;
+}
+
+function stereogram(group, options) {
+  const opts = options || {};
+  const size = opts.size || 440;
+  const mini = !!opts.mini;
+  const hero = !!opts.hero;
+  const dark = opts.theme === 'dark';
+  const R = opts.R || (hero ? 168 : mini ? 23 : size * 0.335);
+  const cx = size / 2;
+  const cy = size / 2;
+  const theme = dark
+    ? {
+        bg: '#171510',
+        line: '#E8DFCB',
+        dim: 'rgba(232,223,203,.3)',
+        soft: 'rgba(232,223,203,.25)',
+        accent: hero ? '#D8B77A' : '#C87A5B',
+        plane: '#8FA7AA',
+        pole: '#E8DFCB',
+        openFill: '#171510',
+        label: 'rgba(232,223,203,.48)'
+      }
+    : {
+        bg: '#F3EBD9',
+        line: '#171510',
+        dim: 'rgba(23,21,16,.26)',
+        soft: 'rgba(23,21,16,.24)',
+        accent: '#D24A2C',
+        plane: '#50666B',
+        pole: '#171510',
+        openFill: '#F3EBD9',
+        label: 'rgba(23,21,16,.46)'
+      };
+  const poleRadius = mini ? 1.55 : hero ? 4.1 : 3.05;
+  let out = '';
+  if (!mini && !hero) out += `<rect width="${size}" height="${size}" fill="${theme.bg}"/>`;
+
+  if (!mini) {
+    out += `<g class="graticule" fill="none" stroke="${theme.dim}" stroke-width=".55">`;
+    [0.34, 0.67].forEach(k => {
+      out += `<circle cx="${cx}" cy="${cy}" r="${R * k}" stroke-dasharray="1.5 6"/>`;
+    });
+    out += '</g>';
+    for (let a = 0; a < 360; a += 30) {
+      const rad = a * DEG;
+      const x = cx + Math.cos(rad) * R * 0.97;
+      const y = cy - Math.sin(rad) * R * 0.97;
+      out += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${theme.dim}" stroke-opacity="${a % 90 === 0 ? .42 : .22}" stroke-width=".5"/>`;
+    }
+    for (let a = 0; a < 360; a += 10) {
+      const rad = a * DEG;
+      const len = a % 30 === 0 ? 7 : 3.4;
+      const x1 = cx + Math.cos(rad) * R;
+      const y1 = cy - Math.sin(rad) * R;
+      const x2 = cx + Math.cos(rad) * (R + len);
+      const y2 = cy - Math.sin(rad) * (R + len);
+      out += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${theme.line}" stroke-opacity="${a % 30 === 0 ? .48 : .24}" stroke-width=".6"/>`;
+    }
+  }
+
+  out += axesMarkup(group, cx, cy, R, theme, size, mini);
+  out += mirrorPlanesMarkup(group, cx, cy, R, theme);
+
+  const points = orbitPoints(group);
+  for (const point of points) {
+    const projected = projectDirection(point);
+    const x = cx + Math.cos(projected.a) * projected.r * R;
+    const y = cy - Math.sin(projected.a) * projected.r * R;
+    if (projected.upper) {
+      out += `<circle cx="${x}" cy="${y}" r="${poleRadius}" fill="${theme.pole}"/>`;
+    } else {
+      out += `<circle cx="${x}" cy="${y}" r="${poleRadius * 0.92}" fill="${theme.openFill}" stroke="${theme.accent}" stroke-width="${poleRadius * 0.55}"/>`;
+    }
+  }
+
+  out += `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${theme.line}" stroke-width="${mini ? 1.1 : 1.2}"/>`;
+
+  if (!mini) {
+    const labelSize = size * 0.021;
+    out += `<text x="${cx + R + 15}" y="${cy + 3}" text-anchor="middle" font-family="Consolas, monospace" font-size="${labelSize}" letter-spacing="1" fill="${theme.label}">x</text>`;
+    out += `<text x="${cx}" y="${cy - R - 12}" text-anchor="middle" font-family="Consolas, monospace" font-size="${labelSize}" letter-spacing="1" fill="${theme.label}">y</text>`;
+  }
+
+  const label = `${group.hm}（${group.sch}）点群的极射赤面投影，一般位置 ${points.length} 个极点`;
+  return `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${label}"${mini ? ' aria-hidden="true" focusable="false"' : ''}>${out}</svg>`;
+}
+
+function crossProduct(a, b) {
+  return [
+    a[1] * b[2] - a[2] * b[1],
+    a[2] * b[0] - a[0] * b[2],
+    a[0] * b[1] - a[1] * b[0]
+  ];
+}
+
+function dotProduct(a, b) {
+  return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+}
+
+function rotationAxes(group) {
+  const result = [];
+  const seen = new Set();
+  for (const axis of group.axes) {
+    let dir;
+    if (axis.type === 'vertical') {
+      dir = [0, 0, 1];
+    } else if (axis.type === 'horizontal') {
+      const angle = axis.az * DEG;
+      dir = [Math.cos(angle), Math.sin(angle), 0];
+    } else {
+      dir = normalize(axis.dir);
+    }
+    let sign = 1;
+    if (dir[0] < -1e-6) sign = -1;
+    else if (Math.abs(dir[0]) < 1e-6 && dir[1] < -1e-6) sign = -1;
+    else if (Math.abs(dir[0]) < 1e-6 && Math.abs(dir[1]) < 1e-6 && dir[2] < 0) sign = -1;
+    const key = [dir[0] * sign, dir[1] * sign, dir[2] * sign].map(v => v.toFixed(4)).join(',');
+    if (seen.has(key)) continue;
+    seen.add(key);
+    result.push({ dir, n: axis.n });
+  }
+  return result;
+}
+
+function threeDView(group, options) {
+  const opts = options || {};
+  const size = opts.size || 440;
+  const R = opts.R || size * 0.335;
+  const cx = size / 2;
+  const cy = size / 2;
+  const sway = opts.sway || { x: 0, y: 0 };
+  const theme = {
+    bg: '#F3EBD9',
+    line: '#171510',
+    dim: 'rgba(23,21,16,.28)',
+    faint: 'rgba(23,21,16,.14)',
+    accent: '#D24A2C',
+    label: 'rgba(23,21,16,.46)'
+  };
+  const az = 34 * DEG;
+  const el = 20 * DEG;
+  const cam = [Math.cos(el) * Math.cos(az), Math.cos(el) * Math.sin(az), Math.sin(el)];
+  const right = [-Math.sin(az), Math.cos(az), 0];
+  const up = crossProduct(cam, right);
+  const project = v => {
+    const depth = dotProduct(v, cam);
+    const perspective = 1 + depth * 0.06;
+    return {
+      x: cx + dotProduct(v, right) * R * perspective + sway.x * depth * 14,
+      y: cy - dotProduct(v, up) * R * perspective + sway.y * depth * 14,
+      depth
+    };
+  };
+  const circlePath = fn => {
+    const pts = [];
+    for (let i = 0; i <= 72; i += 1) {
+      const p = project(fn((i / 72) * Math.PI * 2));
+      pts.push(p.x.toFixed(2) + ',' + p.y.toFixed(2));
+    }
+    return pts.join(' ');
+  };
+  let out = `<rect width="${size}" height="${size}" fill="${theme.bg}"/>`;
+  out += `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${theme.line}" stroke-width="1.1"/>`;
+  out += `<polyline points="${circlePath(t => [Math.cos(t), Math.sin(t), 0])}" fill="none" stroke="${theme.dim}" stroke-width=".7" stroke-dasharray="2 5"/>`;
+  out += `<polyline points="${circlePath(t => [Math.sin(t), 0, Math.cos(t)])}" fill="none" stroke="${theme.faint}" stroke-width=".6"/>`;
+  out += `<polyline points="${circlePath(t => [0, Math.sin(t), Math.cos(t)])}" fill="none" stroke="${theme.faint}" stroke-width=".6"/>`;
+  out += `<polyline points="${circlePath(t => [Math.cos(t) * 0.866, Math.sin(t) * 0.866, 0.5])}" fill="none" stroke="${theme.faint}" stroke-width=".5" stroke-dasharray="1 6"/>`;
+  out += `<polyline points="${circlePath(t => [Math.cos(t) * 0.866, Math.sin(t) * 0.866, -0.5])}" fill="none" stroke="${theme.faint}" stroke-width=".5" stroke-dasharray="1 6"/>`;
+  const axes = rotationAxes(group);
+  let axesOut = '';
+  for (const axis of axes) {
+    const a = project(axis.dir);
+    const b = project([-axis.dir[0], -axis.dir[1], -axis.dir[2]]);
+    const front = a.depth >= b.depth ? a : b;
+    const back = a.depth >= b.depth ? b : a;
+    axesOut += `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="${theme.accent}" stroke-opacity=".45" stroke-width="1"/>`;
+    axesOut += `<line x1="${cx}" y1="${cy}" x2="${front.x}" y2="${front.y}" stroke="${theme.accent}" stroke-opacity=".92" stroke-width="1.35"/>`;
+    axesOut += `<circle cx="${back.x}" cy="${back.y}" r="1.7" fill="${theme.bg}" stroke="${theme.accent}" stroke-width="1"/>`;
+    axesOut += `<circle cx="${front.x}" cy="${front.y}" r="6.6" fill="${theme.bg}"/>`;
+    axesOut += glyph(axis.n, front.x, front.y, 5.8, theme.accent);
+  }
+  out += `<g class="three-axes">${axesOut}</g>`;
+  out += `<circle cx="${cx}" cy="${cy}" r="2.1" fill="${theme.line}"/>`;
+  out += `<path d="M ${cx - 6} ${cy} h 12 M ${cx} ${cy - 6} v 12" stroke="${theme.line}" stroke-opacity=".35" stroke-width=".6"/>`;
+  const triadX = cx - R * 0.86;
+  const triadY = cy + R * 0.86;
+  const triad = [
+    { v: [1, 0, 0], name: 'x' },
+    { v: [0, 1, 0], name: 'y' },
+    { v: [0, 0, 1], name: 'z' }
+  ];
+  for (const item of triad) {
+    const sx = dotProduct(item.v, right) * 22;
+    const sy = -dotProduct(item.v, up) * 22;
+    out += `<line x1="${triadX}" y1="${triadY}" x2="${triadX + sx}" y2="${triadY + sy}" stroke="${theme.line}" stroke-opacity=".55" stroke-width=".8"/>`;
+    out += `<text x="${triadX + sx * 1.28}" y="${triadY + sy * 1.28 + 2.5}" font-family="Consolas, monospace" font-size="${size * 0.019}" fill="${theme.label}">${item.name}</text>`;
+  }
+  out += `<text x="18" y="22" font-family="Consolas, monospace" font-size="${size * 0.018}" letter-spacing="1" fill="${theme.label}">3D / AXES ${axes.length}</text>`;
+  out += `<text x="${size - 18}" y="${size - 16}" text-anchor="end" font-family="Consolas, monospace" font-size="${size * 0.017}" letter-spacing="1" fill="${theme.label}">AZ 34° / EL 20°</text>`;
+  if (!axes.length) {
+    out += `<text x="${cx}" y="${cy + R * 0.52}" text-anchor="middle" font-family="Consolas, monospace" font-size="${size * 0.026}" letter-spacing="2" fill="${theme.label}">NO ROTATION AXES</text>`;
+  }
+  const label = `${group.hm}（${group.sch}）点群的三维旋转轴视图，共 ${axes.length} 条旋转轴`;
+  return `<svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${label}">${out}</svg>`;
+}
+
+function characterTableMarkup(group) {
+  const head = group.classes.map(c => `<th scope="col">${c.label}</th>`).join('');
+  const rows = group.irreps.map(irrep => {
+    const cells = irrep.chars.map(v => {
+      const value = charValue(v);
+      const complex = Math.abs(value.im) > 1e-9;
+      const neg = value.re < 0 && !complex;
+      return `<td class="num${neg ? ' neg' : ''}${complex ? ' complex' : ''}">${charDisplay(v)}</td>`;
+    }).join('');
+    return `<tr><th scope="row">${irrep.name}</th>${cells}<td class="basis">${irrep.basis}</td></tr>`;
+  }).join('');
+  return `<div class="table-wrap"><table class="char-table">
+    <caption class="sr-only">${group.hm}（${group.sch}）点群的特征标表</caption>
+    <thead><tr><th scope="col">IRREP</th>${head}<th scope="col" class="basis-h">基函数 / BASIS</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+}
+
+function productTableMarkup(group) {
+  const head = group.irreps.map(irrep => `<th scope="col">${irrep.name}</th>`).join('');
+  const rows = group.irreps.map((rowIrrep, rowIndex) => {
+    const cells = group.irreps.map((colIrrep, colIndex) => {
+      const label = productLabel(group, rowIrrep, colIrrep);
+      return `<td class="${rowIndex === colIndex ? 'diag' : ''}">${label}</td>`;
+    }).join('');
+    return `<tr><th scope="row">${rowIrrep.name}</th>${cells}</tr>`;
+  }).join('');
+  const compact = group.irreps.length <= 2 ? ' compact' : '';
+  return `<div class="table-wrap"><table class="prod-table${compact}">
+    <caption class="sr-only">${group.hm}（${group.sch}）点群不可约表示的直积分解</caption>
+    <thead><tr><th>⊗</th>${head}</tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+}
+
+function hasComplexChars(group) {
+  return group.irreps.some(irrep => irrep.chars.some(ch => {
+    const value = charValue(ch);
+    return Math.abs(value.im) > 1e-9;
+  }));
+}
+
+function indexRow(group) {
+  const barWidth = Math.max(4, Math.round(44 * group.order / 24));
+  return `<a class="idx-row" href="#g-${group.no}" aria-label="${group.no}，${group.hm}，${group.sch}，${group.system}，群阶 ${group.order}">
+    <span class="i-no">${group.no}</span>
+    <span class="i-fig" aria-hidden="true">${stereogram(group, { size: 60, mini: true })}</span>
+    <span class="i-hm">${group.hm}</span>
+    <span class="i-sch">${group.sch}</span>
+    <span class="i-sys">${group.system}<em>${group.systemEn}</em></span>
+    <span class="i-fam">${group.family}<em>${group.familyEn}</em></span>
+    <span class="i-order"><span>${group.order}</span><span class="order-bar" style="width:${barWidth}px" aria-hidden="true"></span></span>
+    <span class="i-go" aria-hidden="true">↗</span>
+  </a>`;
+}
+
+const SECOND_CONSTRUCTION = {
+  'C₃h': { formula: 'C<sub>n</sub> ∪ σ<sub>h</sub>C<sub>n</sub> → C<sub>nh</sub>', note: 'n = 3 · 水平镜面 σₕ' },
+  'C₃v': { formula: 'C<sub>n</sub> ∪ σ<sub>v</sub>C<sub>n</sub> → C<sub>nv</sub>', note: 'n = 3 · 垂直镜面 σᵥ' },
+  'D₃h': { formula: 'D<sub>n</sub> ∪ σ<sub>h</sub>D<sub>n</sub> → D<sub>nh</sub>', note: 'n = 3 · 水平镜面 σₕ' },
+  'D₃d': { formula: 'D<sub>n</sub> ∪ σ<sub>d</sub>D<sub>n</sub> → D<sub>nd</sub>', note: 'n = 3 · 对角镜面 σ𝑑' },
+  'S₆': { formula: 'C<sub>2n+1</sub> ∪ iC<sub>2n+1</sub> → S<sub>4n+2</sub>', note: 'n = 1 · S₆ = S₂ₙ (n = 3)' },
+  'Td': { formula: 'T ∪ σ<sub>d</sub>T → T<sub>d</sub>', note: '对角镜面 σ𝑑' },
+  'Oh': { formula: 'O ∪ iO → O<sub>h</sub>', note: '反演中心 i' }
+};
+
+const SECOND_REST = [
+  { hm: '<span class="bar">1</span>', sch: 'Cᵢ', fam: 'S₂ₙ', sys: '三斜' },
+  { hm: 'm', sch: 'Cₛ', fam: 'Cₙₕ', sys: '单斜' },
+  { hm: '2/m', sch: 'C₂h', fam: 'Cₙₕ', sys: '单斜' },
+  { hm: 'mm2', sch: 'C₂v', fam: 'Cₙᵥ', sys: '正交' },
+  { hm: 'mmm', sch: 'D₂h', fam: 'Dₙₕ', sys: '正交' },
+  { hm: '<span class="bar">4</span>', sch: 'S₄', fam: 'S₄', sys: '四方' },
+  { hm: '4/m', sch: 'C₄h', fam: 'Cₙₕ', sys: '四方' },
+  { hm: '4mm', sch: 'C₄v', fam: 'Cₙᵥ', sys: '四方' },
+  { hm: '<span class="bar">4</span>2m', sch: 'D₂d', fam: 'Dₙ𝑑', sys: '四方' },
+  { hm: '4/mmm', sch: 'D₄h', fam: 'Dₙₕ', sys: '四方' },
+  { hm: '6/m', sch: 'C₆h', fam: 'Cₙₕ', sys: '六方' },
+  { hm: '6mm', sch: 'C₆v', fam: 'Cₙᵥ', sys: '六方' },
+  { hm: '6/mmm', sch: 'D₆h', fam: 'Dₙₕ', sys: '六方' },
+  { hm: 'm<span class="bar">3</span>', sch: 'Th', fam: 'Tₕ', sys: '立方' }
+];
+
+function secondIndexRow(group, index) {
+  const construction = SECOND_CONSTRUCTION[group.sch] || { formula: '', note: '' };
+  const pageNo = group.hm === 'm3̅m' ? '22–23' : String(index + 16);
+  const barWidth = Math.max(4, Math.round(44 * group.order / 24));
+  return `<a class="s-idx-row" href="#s-${group.no}" aria-label="${group.no}，${group.hm}，${group.sch}，${group.system}，群阶 ${group.order}">
+    <span class="i-no">${group.no}</span>
+    <span class="i-fig" aria-hidden="true">${stereogram(group, { size: 64, mini: true })}</span>
+    <span class="i-hm">${group.hmHtml || group.hm}</span>
+    <span class="i-sch">${group.sch}</span>
+    <span class="i-sys">${group.system}<em>${group.systemEn}</em></span>
+    <span class="i-fam">${group.family}<em>${group.familyEn}</em></span>
+    <span class="i-con"><b>${construction.formula}</b><em>${construction.note}</em></span>
+    <span class="i-order"><span>${group.order}</span><span class="order-bar" style="width:${barWidth}px" aria-hidden="true"></span></span>
+    <span class="i-go"><b>${pageNo}</b><span aria-hidden="true">↗</span></span>
+  </a>`;
+}
+
+function groupArticle(group, index, options) {
+  const opts = options || {};
+  const isSecond = opts.kind === 'second';
+  const totalPages = opts.totalPages || 24;
+  const groupTotal = opts.groupTotal || (isSecond ? 7 : 11);
+  const poles = orbitPoints(group).length;
+  const axisCount = rotationAxes(group).length;
+  const planeMarks = [(group.mirrors || []).length ? 'm' : '', group.inversion ? 'i' : ''].filter(Boolean).join(' / ');
+  const planeCaption = planeMarks ? ` · 蓝 ${planeMarks}` : '';
+  const chips = group.classes.map(c => `<span class="chip">${c.label}<b>×${c.size}</b></span>`).join('');
+  const complexNote = hasComplexChars(group);
+  const pageNo = String(isSecond ? index + 16 : index + 4).padStart(2, '0');
+  const idPrefix = isSecond ? 's' : 'g';
+  const indexHash = isSecond ? '#second-index' : '#index';
+  const wide = isSecond && group.irreps.length > 6;
+  const splitProducts = isSecond && group.hm === 'm3̅m';
+  const rootNotes = {
+    '3': 'ε = exp(2πi/3)，i = √−1；E⁺ 与 E⁻ 互为共轭。',
+    '4': 'i = √−1；E⁺ 与 E⁻ 互为共轭。',
+    '6': 'ζ = exp(2πi/6)，i = √−1；E₁⁺/E₁⁻、E₂⁺/E₂⁻ 分别互为共轭。',
+    '23': 'ε = exp(2πi/3)；E⁺ 与 E⁻ 互为共轭，基函数为实 E 基的复组合。',
+    '6̅': 'ζ = exp(2πi/6)；E′⁺/E′⁻ 与 E″⁺/E″⁻ 分别互为共轭。',
+    '3̅': 'ζ = exp(2πi/6)；Eg⁺/Eg⁻ 与 Eu⁺/Eu⁻ 分别互为共轭。'
+  };
+  const tableNote = complexNote
+    ? '系数 1 省略。直积按复不可约表示分解；如有重复分量，系数显式标出。'
+    : '系数 1 省略。直积表关于对角线对称。';
+  const characterNote = complexNote
+    ? rootNotes[group.hm] || '本群采用复不可约表示。'
+    : '本群所有不可约表示均为实值；复表示与实表示一致。';
+  return `<div class="page-frame" id="${idPrefix}-${group.no}">
+    <article class="sheet pg${wide ? ' pg-wide' : ''}" aria-labelledby="h-${group.no}">
+      <header class="p-head">
+        <span class="ph-left">PLATE ${pageNo} — ${isSecond ? 'SECOND KIND' : 'GROUP'} ${group.no} / ${groupTotal}</span>
+        <span class="ph-mid">${group.sch} / ${group.hmHtml || group.hm}</span>
+        <span class="ph-right">${pageNo} / ${totalPages}</span>
+      </header>
+      <div class="p-body">
+        <div class="g-top">
+          <header class="g-head">
+            <div class="g-no">${group.no}<span>/${groupTotal}</span></div>
+            <h3 class="g-sym" id="h-${group.no}"><span class="g-hm">${group.sch}</span><span class="g-sch">${group.hmHtml || group.hm}</span></h3>
+            <div class="g-tags">
+              <span class="tag ${isSecond ? 'second' : 'accent'}">${isSecond ? '第二类 / IMPROPER' : '第一类 / PROPER'}</span>
+              <span class="tag">${group.family} / ${group.familyEn}</span>
+              <span class="tag">${group.system} / ${group.systemEn}</span>
+            </div>
+          </header>
+          <div class="g-note">
+            <span class="g-note-label">结构</span>
+            <p>${group.note}</p>
+          </div>
+        </div>
+        <div class="g-hero">
+          <figure class="fig" data-viewer>
+            <div class="fig-head">
+              <span class="fig-view">视图<span class="fig-view-en">VIEW</span></span>
+              <div class="view-switch" role="group" aria-label="视图切换">
+                <button type="button" data-view="2d" class="is-active" aria-pressed="true">2D</button>
+                <button type="button" data-view="3d" aria-pressed="false">3D</button>
+              </div>
+              <span>FIG. ${group.no}</span>
+            </div>
+            <div class="fig-chart">
+              <div class="view-panel" data-panel="2d">${stereogram(group, { size: 440 })}</div>
+              <div class="view-panel" data-panel="3d" data-three-group="${group.hm}" data-three-size="440" hidden>${threeDView(group, { size: 440 })}</div>
+            </div>
+            <figcaption>
+              <span class="cap-2d">一般位置 θ 55° / φ 27° · POLES ${poles}${planeCaption}</span>
+              <span class="cap-3d" hidden>三维视角 · AXES ${axisCount}</span>
+              <span>${group.sch} / ${group.hmHtml || group.hm}</span>
+            </figcaption>
+          </figure>
+          <aside class="g-side" aria-label="群数据">
+            <div class="g-side-head"><span>DATA / 数据</span><span>|G| = ${group.order}</span></div>
+            <dl class="g-facts">
+              <div><dt>晶系</dt><dd>${group.system}<em>${group.systemEn}</em></dd></div>
+              <div><dt>群族</dt><dd>${group.family}<em>${group.familyEn} / ${group.familyShort}</em></dd></div>
+              <div><dt>群阶</dt><dd>${group.order}<em>|G| = ORDER</em></dd></div>
+              <div><dt>共轭类</dt><dd>${group.classes.length}<em>CLASSES</em></dd></div>
+              <div><dt>生成元</dt><dd class="mono">${group.gen}</dd></div>
+              <div><dt>群元素</dt><dd><div class="chips">${chips}</div></dd></div>
+            </dl>
+            <p class="g-side-note">一般位置 θ 55° / φ 27°。实心为上半球极点，空心为下半球对映；极点数等于群阶。</p>
+            <div class="checks" aria-label="群参数校验">
+              <div class="checks-head"><span>校验 · BALANCE</span><span>ORDER · CLASSES · IRREPS · POLES</span></div>
+              <div class="check-grid">
+                <div class="check-cell"><span>ORDER</span><b>${group.order}</b></div>
+                <div class="check-cell"><span>CLASSES</span><b>${group.classes.length}</b></div>
+                <div class="check-cell"><span>IRREPS</span><b>${group.irreps.length}</b></div>
+                <div class="check-cell"><span>POLES</span><b>${poles}</b></div>
+              </div>
+            </div>
+          </aside>
+        </div>
+        <div class="g-tables">
+          <section class="panel" aria-label="特征标表">
+            <div class="panel-head"><span>特征标 · CHARACTER TABLE</span><span>${group.classes.length} CLASSES / ${group.irreps.length} IRREPS</span></div>
+            <div class="panel-body">
+              ${characterTableMarkup(group)}
+              <div class="table-note"><b>NOTE</b><span>${characterNote}</span></div>
+            </div>
+          </section>
+          ${splitProducts
+            ? `<div class="product-next"><span>表示直积 · DIRECT PRODUCTS</span><a href="#s-07-products">10 × 10 表见下一页 / PLATE 23 →</a></div>`
+            : `<section class="panel" aria-label="不可约表示直积分解">
+                <div class="panel-head"><span>表示直积 · DIRECT PRODUCTS</span><span>A ⊗ B</span></div>
+                <div class="panel-body">
+                  ${productTableMarkup(group)}
+                  <div class="table-note"><b>NOTE</b><span>${tableNote}</span></div>
+                </div>
+              </section>`}
+        </div>
+        <div class="g-tail">
+          <span>GENERAL POSITION θ 55° / φ 27° · POLES ${poles}</span>
+          <span>${group.systemEn} · ${group.familyEn} · ORDER ${group.order}</span>
+          <span class="barcode" aria-hidden="true"></span>
+        </div>
+      </div>
+      <footer class="p-foot">
+        <span>${isSecond ? 'SECOND KIND' : 'GROUP'} ${group.no} / ${groupTotal} — ${group.sch} / ${group.hmHtml || group.hm}</span>
+        <span>${group.systemEn} · ${group.familyEn}</span>
+        <span><a href="${indexHash}">${isSecond ? 'SECOND ↑' : 'INDEX ↑'}</a> · ${pageNo} / ${totalPages}</span>
+      </footer>
+    </article>
+  </div>`;
+}
+
+function productPageMarkup(group, pageNo, totalPages) {
+  return `<div class="page-frame" id="s-07-products">
+    <article class="sheet product-page" aria-labelledby="product-title">
+      <header class="p-head">
+        <span class="ph-left">PLATE ${pageNo} — ${group.sch} / DIRECT PRODUCTS</span>
+        <span class="ph-mid">${group.sch} / ${group.hmHtml || group.hm}</span>
+        <span class="ph-right">${pageNo} / ${totalPages}</span>
+      </header>
+      <div class="p-body product-page-body">
+        <div class="page-title">
+          <div>
+            <div class="eyebrow">DIRECT PRODUCTS / ${group.sch}</div>
+            <h2 id="product-title">不可约表示直积</h2>
+          </div>
+          <p class="page-desc">${group.sch} 的 10 个不可约表示两两直积，按复不可约表示完整分解。系数 1 省略；对角线格以浅色标出。</p>
+        </div>
+        <div class="product-page-summary">
+          <div><span>GROUP</span><b>${group.sch}</b></div>
+          <div><span>ORDER</span><b>${group.order}</b></div>
+          <div><span>CLASSES</span><b>${group.classes.length}</b></div>
+          <div><span>IRREPS</span><b>${group.irreps.length}</b></div>
+          <div><span>PRODUCTS</span><b>100</b></div>
+        </div>
+        <section class="panel">
+          <div class="panel-head"><span>表示直积 · DIRECT PRODUCTS / ${group.sch} / ${group.hmHtml || group.hm}</span><span>A ⊗ B</span></div>
+          <div class="panel-body">
+            ${productTableMarkup(group)}
+            <div class="table-note"><b>NOTE</b><span>系数 1 省略。直积表关于对角线对称；对角格标出 A ⊗ A 的分解。</span></div>
+          </div>
+        </section>
+        <div class="product-back"><a href="#s-07">← 返回 Oh 群页 / PLATE 22</a></div>
+      </div>
+      <footer class="p-foot">
+        <span>SECOND KIND 07 / 07 — ${group.sch} / ${group.hmHtml || group.hm}</span>
+        <span>${group.systemEn} · ${group.familyEn}</span>
+        <span><a href="#second-index">SECOND ↑</a> · ${pageNo} / ${totalPages}</span>
+      </footer>
+    </article>
+  </div>`;
+}
+
+function validateGroups() {
+  const issues = [];
+  if (SECOND_GROUPS.length + SECOND_REST.length !== 21) {
+    issues.push('second-kind index count ' + (SECOND_GROUPS.length + SECOND_REST.length));
+  }
+  for (const group of SECOND_GROUPS) {
+    if (!SECOND_CONSTRUCTION[group.sch]) issues.push(group.sch + ': missing construction');
+  }
+  for (const group of [...GROUPS, ...SECOND_GROUPS]) {
+    const classSum = group.classes.reduce((sum, c) => sum + c.size, 0);
+    const poles = orbitPoints(group).length;
+    if (classSum !== group.order) issues.push(group.hm + ': class sum ' + classSum);
+    if (poles !== group.order) issues.push(group.hm + ': pole count ' + poles);
+    if (group.classes.length !== group.irreps.length) {
+      issues.push(group.hm + ': class/irrep mismatch');
+    }
+    for (const irrep of group.irreps) {
+      if (irrep.chars.length !== group.classes.length) {
+        issues.push(group.hm + ': character row length for ' + irrep.name);
+      }
+      const norm = irrepNorm(group, irrep);
+      if (Math.abs(norm - 1) > 1e-6) {
+        issues.push(group.hm + ': irrep norm ' + norm.toFixed(3) + ' for ' + irrep.name);
+      }
+    }
+    for (let i = 0; i < group.irreps.length; i += 1) {
+      for (let j = i + 1; j < group.irreps.length; j += 1) {
+        let real = 0;
+        let imag = 0;
+        group.classes.forEach((c, k) => {
+          const left = charValue(group.irreps[i].chars[k]);
+          const right = charConj(group.irreps[j].chars[k]);
+          real += c.size * (left.re * right.re - left.im * right.im);
+          imag += c.size * (left.re * right.im + left.im * right.re);
+        });
+        if (Math.hypot(real / group.order, imag / group.order) > 1e-6) {
+          issues.push(group.hm + ': irrep orthogonality ' + group.irreps[i].name + '/' + group.irreps[j].name);
+        }
+      }
+    }
+    for (const a of group.irreps) {
+      for (const b of group.irreps) {
+        group.irreps.forEach(irrep => {
+          let real = 0;
+          let imag = 0;
+          group.classes.forEach((c, k) => {
+            const product = charMul(a.chars[k], b.chars[k]);
+            const conj = charConj(irrep.chars[k]);
+            real += c.size * (product.re * conj.re - product.im * conj.im);
+            imag += c.size * (product.re * conj.im + product.im * conj.re);
+          });
+          const value = real / group.order;
+          if (Math.abs(value - Math.round(value)) > 1e-6 || Math.abs(imag / group.order) > 1e-6) {
+            issues.push(group.hm + ': non-integer multiplicity ' + a.name + '×' + b.name);
+          }
+        });
+      }
+    }
+  }
+  return issues;
+}
+
+function render() {
+  const oGroup = GROUPS.find(group => group.hm === '432');
+  const sampleGroup = GROUPS.find(group => group.hm === '222');
+  document.getElementById('coverDeco').innerHTML = coverFanMarkup();
+  document.getElementById('plateRays').innerHTML = plateRaysMarkup(864, 620, 310, 310, 186);
+  document.getElementById('heroChart').innerHTML = stereogram(oGroup, { size: 560, hero: true, theme: 'dark' });
+  document.getElementById('guideChart').innerHTML = stereogram(sampleGroup, { size: 400 });
+  document.getElementById('guide3dChart').innerHTML = threeDView(sampleGroup, { size: 400 });
+  document.getElementById('colophonChart').innerHTML = stereogram(oGroup, { size: 540, theme: 'dark' });
+  const register = [
+    ...GROUPS.map((group, index) => ({ group, page: String(index + 4).padStart(2, '0') })),
+    ...SECOND_GROUPS.map((group, index) => ({ group, page: group.hm === 'm3̅m' ? '22–23' : String(index + 16).padStart(2, '0') }))
+  ];
+  document.getElementById('colophonRegister').innerHTML = register.map(({ group, page }) => {
+    return `<li><span class="r-hm">${group.hmHtml || group.hm}</span><span class="r-sch">${group.sch}</span><span class="r-fam">${group.familyEn} / ${group.systemEn}</span><span class="r-page">${page}</span></li>`;
+  }).join('');
+  document.getElementById('indexRows').innerHTML = GROUPS.map(indexRow).join('');
+  const secondIndex = document.getElementById('secondIndexRows');
+  if (secondIndex) secondIndex.innerHTML = SECOND_GROUPS.map((group, index) => secondIndexRow(group, index)).join('');
+  const secondRest = document.getElementById('secondRestRows');
+  if (secondRest) secondRest.innerHTML = SECOND_REST.map(group => `<span class="s-rest-item"><b>${group.hm}</b><span>${group.sch}</span><em>${group.fam}</em><i>${group.sys}</i></span>`).join('');
+  document.getElementById('atlasItems').innerHTML = GROUPS.map((group, index) => groupArticle(group, index, { kind: 'first', totalPages: 24, groupTotal: 11 })).join('');
+  document.getElementById('secondItems').innerHTML = SECOND_GROUPS.map((group, index) => groupArticle(group, index, { kind: 'second', totalPages: 24, groupTotal: 7 })).join('') + productPageMarkup(SECOND_GROUPS[6], '23', 24);
+
+  const issues = validateGroups();
+  document.documentElement.dataset.pgStatus = issues.length ? 'error' : 'ok';
+  if (issues.length) {
+    console.error('Point group validation:', issues);
+    document.documentElement.dataset.pgIssues = issues.join(' | ');
+  }
+}
+
+function fitPages() {
+  document.querySelectorAll('.page-frame').forEach(frame => {
+    const sheet = frame.querySelector('.sheet');
+    if (!sheet) return;
+    const scale = frame.clientWidth / 940;
+    sheet.style.transform = 'scale(' + scale + ')';
+  });
+}
+
+render();
+fitPages();
+
+if (location.hash) {
+  const target = document.querySelector(location.hash);
+  if (target) {
+    document.documentElement.style.scrollBehavior = 'auto';
+    target.scrollIntoView({ block: 'start' });
+    window.requestAnimationFrame(() => {
+      document.documentElement.style.scrollBehavior = '';
+    });
+  }
+}
+
+window.addEventListener('resize', fitPages, { passive: true });
+window.addEventListener('load', fitPages);
+
+document.addEventListener('click', event => {
+  const button = event.target.closest('.view-switch button');
+  if (!button) return;
+  const viewer = button.closest('[data-viewer]');
+  if (!viewer) return;
+  const view = button.dataset.view;
+  const threeDPanel = viewer.querySelector('.view-panel[data-panel="3d"]');
+  const reveal3D = view === '3d' && threeDPanel && threeDPanel.hidden;
+  viewer.querySelectorAll('.view-switch button').forEach(item => {
+    const active = item === button;
+    item.classList.toggle('is-active', active);
+    item.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+  viewer.querySelectorAll('.view-panel').forEach(panel => {
+    panel.hidden = panel.dataset.panel !== view;
+  });
+  viewer.querySelectorAll('.cap-2d, .cap-3d').forEach(caption => {
+    caption.hidden = !caption.classList.contains('cap-' + view);
+  });
+  if (reveal3D) startThreeReveal(threeDPanel);
+});
+
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const parallaxScopes = [];
+let parallaxQueued = false;
+
+function initScrollParallax() {
+  document.querySelectorAll('.pg').forEach(scope => {
+    const targets = [...scope.querySelectorAll('.g-hero .fig, .g-tables .panel, .product-next, .g-side .checks')];
+    if (!targets.length) return;
+    targets.forEach(target => target.classList.add('is-parallax'));
+    parallaxScopes.push({ scope, targets });
+  });
+}
+
+function updateScrollParallax() {
+  parallaxQueued = false;
+  if (reduceMotion.matches) return;
+  const mid = window.innerHeight / 2;
+  const range = Math.max(420, window.innerHeight * 0.55);
+  parallaxScopes.forEach(({ scope, targets }) => {
+    const rect = scope.getBoundingClientRect();
+    const delta = rect.top + rect.height / 2 - mid;
+    const progress = Math.max(-1, Math.min(1, delta / range));
+    const y = (progress * 16).toFixed(2);
+    targets.forEach(target => {
+      target.style.transform = 'translate3d(0,' + y + 'px,0)';
+    });
+  });
+}
+
+function queueScrollParallax() {
+  if (parallaxQueued) return;
+  parallaxQueued = true;
+  window.requestAnimationFrame(updateScrollParallax);
+}
+
+const threeSwayControllers = [];
+const threeControllerByPanel = new WeakMap();
+
+function startThreeReveal(panel) {
+  const ctrl = threeControllerByPanel.get(panel);
+  if (!ctrl) return;
+  ctrl.pointer = null;
+  if (ctrl.frame) {
+    window.cancelAnimationFrame(ctrl.frame);
+    ctrl.frame = 0;
+  }
+  ctrl.revealUntil = performance.now() + 720;
+  panel.classList.remove('is-revealing');
+  panel.innerHTML = threeDView(ctrl.group, { size: ctrl.size, sway: { x: 0, y: 0 } });
+  void panel.offsetWidth;
+  panel.classList.add('is-revealing');
+  window.setTimeout(() => {
+    panel.classList.remove('is-revealing');
+    ctrl.revealUntil = 0;
+  }, 720);
+}
+
+function resetThreeController(ctrl) {
+  ctrl.pointer = null;
+  if (ctrl.frame) {
+    window.cancelAnimationFrame(ctrl.frame);
+    ctrl.frame = 0;
+  }
+  ctrl.panel.innerHTML = threeDView(ctrl.group, { size: ctrl.size, sway: { x: 0, y: 0 } });
+  ctrl.lastIdle = performance.now();
+}
+
+function init3DSway() {
+  const groups = new Map([...GROUPS, ...SECOND_GROUPS].map(group => [group.hm, group]));
+  document.querySelectorAll('[data-viewer]').forEach(viewer => {
+    const panel = viewer.querySelector('.view-panel[data-panel="3d"]');
+    if (!panel) return;
+    const group = groups.get(panel.dataset.threeGroup);
+    if (!group) return;
+    const size = Number(panel.dataset.threeSize) || 440;
+    const stage = panel.parentElement;
+    const ctrl = {
+      viewer,
+      panel,
+      group,
+      size,
+      stage,
+      pointer: null,
+      frame: 0,
+      lastIdle: 0,
+      revealUntil: 0,
+      phase: threeSwayControllers.length * 1.37
+    };
+    threeSwayControllers.push(ctrl);
+    threeControllerByPanel.set(panel, ctrl);
+    viewer.addEventListener('pointermove', event => {
+      if (panel.hidden || performance.now() < ctrl.revealUntil) return;
+      if (!stage.contains(event.target)) {
+        if (ctrl.pointer) resetThreeController(ctrl);
+        return;
+      }
+      const rect = stage.getBoundingClientRect();
+      const x = Math.max(-0.5, Math.min(0.5, (event.clientX - rect.left) / rect.width - 0.5));
+      const y = Math.max(-0.5, Math.min(0.5, (event.clientY - rect.top) / rect.height - 0.5));
+      ctrl.pointer = { x, y };
+      if (!ctrl.frame) {
+        ctrl.frame = window.requestAnimationFrame(() => {
+          ctrl.frame = 0;
+          if (!ctrl.pointer || panel.hidden || reduceMotion.matches) return;
+          panel.innerHTML = threeDView(group, { size, sway: ctrl.pointer });
+        });
+      }
+    });
+    viewer.addEventListener('pointerleave', () => {
+      if (ctrl.pointer) resetThreeController(ctrl);
+    });
+  });
+}
+
+function startThreeIdle() {
+  function idle(now) {
+    threeSwayControllers.forEach(ctrl => {
+      if (ctrl.panel.hidden) {
+        ctrl.pointer = null;
+        return;
+      }
+      if (ctrl.pointer || reduceMotion.matches) return;
+      if (now < ctrl.revealUntil) return;
+      if (now - ctrl.lastIdle < 50) return;
+      const rect = ctrl.stage.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > window.innerHeight || rect.right < 0 || rect.left > window.innerWidth) return;
+      ctrl.lastIdle = now;
+      const xPhase = now * (Math.PI * 2 / 2500);
+      const yPhase = now * (Math.PI * 2 / 3700);
+      const sway = {
+        x: Math.sin(xPhase + ctrl.phase) * 0.16,
+        y: Math.sin(yPhase + ctrl.phase * 1.35) * 0.11
+      };
+      ctrl.panel.innerHTML = threeDView(ctrl.group, { size: ctrl.size, sway });
+    });
+    window.requestAnimationFrame(idle);
+  }
+  window.requestAnimationFrame(idle);
+}
+
+initScrollParallax();
+init3DSway();
+startThreeIdle();
+queueScrollParallax();
+window.addEventListener('scroll', queueScrollParallax, { passive: true });
+window.addEventListener('resize', queueScrollParallax, { passive: true });
+window.addEventListener('load', queueScrollParallax);
+</script>
+</body>
+</html>
