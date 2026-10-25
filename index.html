@@ -2532,23 +2532,6 @@ svg {
   line-height: 0;
 }
 
-@keyframes three-axes-radiate {
-  from {
-    opacity: .0;
-    transform: scale(.04);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.view-panel.is-revealing .three-axes {
-  transform-box: view-box;
-  transform-origin: 50% 50%;
-  animation: three-axes-radiate .68s cubic-bezier(.2, .75, .2, 1) both;
-}
-
 .view-panel svg {
   width: 100%;
   height: auto;
@@ -4397,6 +4380,7 @@ function threeDView(group, options) {
   const cx = size / 2;
   const cy = size / 2;
   const sway = opts.sway || { x: 0, y: 0 };
+  const reveal = opts.reveal == null ? 1 : opts.reveal;
   const theme = {
     bg: '#F3EBD9',
     line: '#171510',
@@ -4435,17 +4419,24 @@ function threeDView(group, options) {
   out += `<polyline points="${circlePath(t => [Math.cos(t) * 0.866, Math.sin(t) * 0.866, 0.5])}" fill="none" stroke="${theme.faint}" stroke-width=".5" stroke-dasharray="1 6"/>`;
   out += `<polyline points="${circlePath(t => [Math.cos(t) * 0.866, Math.sin(t) * 0.866, -0.5])}" fill="none" stroke="${theme.faint}" stroke-width=".5" stroke-dasharray="1 6"/>`;
   const axes = rotationAxes(group);
+  const radial = point => ({
+    x: cx + (point.x - cx) * reveal,
+    y: cy + (point.y - cy) * reveal,
+    depth: point.depth
+  });
   let axesOut = '';
   for (const axis of axes) {
     const a = project(axis.dir);
     const b = project([-axis.dir[0], -axis.dir[1], -axis.dir[2]]);
-    const front = a.depth >= b.depth ? a : b;
-    const back = a.depth >= b.depth ? b : a;
-    axesOut += `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="${theme.accent}" stroke-opacity=".45" stroke-width="1"/>`;
+    const front = radial(a.depth >= b.depth ? a : b);
+    const back = radial(a.depth >= b.depth ? b : a);
+    const start = radial(a);
+    const end = radial(b);
+    axesOut += `<line x1="${start.x}" y1="${start.y}" x2="${end.x}" y2="${end.y}" stroke="${theme.accent}" stroke-opacity=".45" stroke-width="1"/>`;
     axesOut += `<line x1="${cx}" y1="${cy}" x2="${front.x}" y2="${front.y}" stroke="${theme.accent}" stroke-opacity=".92" stroke-width="1.35"/>`;
     axesOut += `<circle cx="${back.x}" cy="${back.y}" r="1.7" fill="${theme.bg}" stroke="${theme.accent}" stroke-width="1"/>`;
     axesOut += `<circle cx="${front.x}" cy="${front.y}" r="6.6" fill="${theme.bg}"/>`;
-    axesOut += glyph(axis.n, front.x, front.y, 5.8, theme.accent);
+    axesOut += glyph(axis.n, front.x, front.y, 5.8 * (0.45 + reveal * 0.55), theme.accent);
   }
   out += `<g class="three-axes">${axesOut}</g>`;
   out += `<circle cx="${cx}" cy="${cy}" r="2.1" fill="${theme.line}"/>`;
@@ -4929,15 +4920,41 @@ function startThreeReveal(panel) {
     window.cancelAnimationFrame(ctrl.frame);
     ctrl.frame = 0;
   }
-  ctrl.revealUntil = performance.now() + 720;
-  panel.classList.remove('is-revealing');
-  panel.innerHTML = threeDView(ctrl.group, { size: ctrl.size, sway: { x: 0, y: 0 } });
-  void panel.offsetWidth;
-  panel.classList.add('is-revealing');
-  window.setTimeout(() => {
-    panel.classList.remove('is-revealing');
+  if (ctrl.revealFrame) {
+    window.cancelAnimationFrame(ctrl.revealFrame);
+    ctrl.revealFrame = 0;
+  }
+  if (reduceMotion.matches) {
     ctrl.revealUntil = 0;
-  }, 720);
+    panel.innerHTML = threeDView(ctrl.group, { size: ctrl.size, sway: { x: 0, y: 0 }, reveal: 1 });
+    return;
+  }
+  const start = performance.now();
+  const duration = 680;
+  ctrl.revealUntil = start + duration + 180;
+  panel.innerHTML = threeDView(ctrl.group, { size: ctrl.size, sway: { x: 0, y: 0 }, reveal: 0.04 });
+  function step(now) {
+    if (panel.hidden) {
+      ctrl.revealFrame = 0;
+      ctrl.revealUntil = 0;
+      return;
+    }
+    const progress = Math.min(1, (now - start) / duration);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    panel.innerHTML = threeDView(ctrl.group, {
+      size: ctrl.size,
+      sway: { x: 0, y: 0 },
+      reveal: 0.04 + 0.96 * eased
+    });
+    if (progress < 1) {
+      ctrl.revealFrame = window.requestAnimationFrame(step);
+    } else {
+      ctrl.revealFrame = 0;
+      ctrl.revealUntil = 0;
+      ctrl.lastIdle = now;
+    }
+  }
+  ctrl.revealFrame = window.requestAnimationFrame(step);
 }
 
 function resetThreeController(ctrl) {
@@ -4967,6 +4984,7 @@ function init3DSway() {
       stage,
       pointer: null,
       frame: 0,
+      revealFrame: 0,
       lastIdle: 0,
       revealUntil: 0,
       phase: threeSwayControllers.length * 1.37
